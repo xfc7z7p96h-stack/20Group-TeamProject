@@ -13,6 +13,7 @@ class Battle
 	void Start(Player& player,Inventory inven );
 	int Random_();
 	Item RandomItem(int r);
+	int RandomGold(int r);
 };
 
 

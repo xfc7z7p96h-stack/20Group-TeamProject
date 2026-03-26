@@ -50,7 +50,9 @@ void Battle::Start(Player& player, Inventory inven)
 			int randomItem = Random_();
 			int randomItemAmount = Random_() % 3;
 
-			inven.AddItem(RandomItem(Random_()));
+			inven.AddItem(RandomItem(Random_())); // ·£´ý ¾ÆÀÌÅÛ Ãß°¡
+			
+			inven.AddGold(RandomGold(Random_())); // ·£´ý °ñµå
 
 
 
@@ -80,4 +82,18 @@ Item Battle::RandomItem(int r)
 		Item AttackPotion("Attack Potion", 10, ItemType::ATTACK_POTION);
 		return AttackPotion;
 	}
+}
+int Battle::RandomGold(int r)
+{
+	r + 3;
+	if (r < 8)
+	{
+		r * 2; // °ñµå ÃÖ¼Ò µå¶ø¾ç 6up 15down
+	}
+	if (r > 15)
+	{
+		r = 15;
+	}
+	return r;
+	
 }
