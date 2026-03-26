@@ -68,9 +68,9 @@ int Player::GetExp()
 
 void Player::PlayerStatus() const
 {
-	std::cout << "닉네임 :" << nick_name << std::endl;
-	std::cout << "최대 체력 :" << maxHp << std::endl;
-	std::cout << "현재 체력 :" << hp << std::endl;
-	std::cout << "공격력 :" << damage << std::endl;
-	std::cout << "경험치 :" << exp << std::endl;
+	std::cout << "?г??? :" << nick_name << std::endl;
+	std::cout << "??? ??? :" << maxHp << std::endl;
+	std::cout << "???? ??? :" << hp << std::endl;
+	std::cout << "????? :" << damage << std::endl;
+	std::cout << "????? :" << exp << std::endl;
 }
