@@ -31,7 +31,7 @@ void Inventory::AddGold(int value)
     std::cout << value << " °ñµå¸¦ È¹µæÇß´Ù!\n";
 }
 
-void Inventory::UseItem(int index, Character& target)
+void Inventory::UseItem(int index, Player& target)
 {
     if (index < 0 || index >= items.size())
     {

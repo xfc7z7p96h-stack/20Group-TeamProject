@@ -17,7 +17,7 @@ ItemType Item::GetType() const
     return type;
 }
 
-void Item::Use(Character& player)
+void Item::Use(Player& player)
 {
     if (type == ItemType::HP_POTION)
     {

@@ -1,7 +1,7 @@
 // Item.h
 #pragma once
 #include <string>
-#include "Character.h"
+#include "Player.h"
 
 enum class ItemType
 {
@@ -22,6 +22,6 @@ public:
 	std::string GetName() const;
 	ItemType GetType() const;
 
-	void Use(Character& player);
+	void Use(Player& player);
 
 };

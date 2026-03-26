@@ -13,7 +13,7 @@ private:
 
 public:
 	void AddItem(const Item& item);
-	void UseItem(int index, Character& target);
+	void UseItem(int index, Player& target);
 	void ShowInventory() const;
 	void AddGold(int value);
 };
