@@ -11,13 +11,13 @@ int Battle::Random_()
 
 	return random;
 }
-ReturnValue Battle::Start(Player& player)
+void Battle::Start(Player& player, Inventory inven)
 {
-	
+
 
 	if (player.GetHp() >= 0)
 	{
-		int RandomMonster = Random_() %3; // 0 ~ 2
+		int RandomMonster = Random_() % 3; // 0 ~ 2
 
 
 		std::unique_ptr<Zombie> monster;
@@ -39,16 +39,18 @@ ReturnValue Battle::Start(Player& player)
 			break;
 		}
 		}
-	
-		
+
+
 		//플레이어 공격
 
-		
 
-		if (monster->IsAlive()  == false)
+
+		if (monster->IsDead() == false)
 		{
 			int randomItem = Random_();
 			int randomItemAmount = Random_() % 3;
+
+			inven.AddItem(RandomItem(Random_()));
 
 
 
@@ -58,8 +60,24 @@ ReturnValue Battle::Start(Player& player)
 		}
 		else
 		{
-			monster.Attack(attack)->player;
+
 		}
 
+	}
+}
+
+Item Battle::RandomItem(int r)
+{
+	r % 4; // 0 ~ 1
+	switch (r)
+	{
+	case 0:
+	{
+		Item HpPotion("HP Potion", 50, ItemType::HP_POTION);
+		return HpPotion;
+	}
+	case 1:
+		Item AttackPotion("Attack Potion", 10, ItemType::ATTACK_POTION);
+		return AttackPotion;
 	}
 }

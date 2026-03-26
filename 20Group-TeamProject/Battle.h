@@ -3,20 +3,17 @@
 #include "Item.h"
 #include "Zombie.h"
 #include <memory>
+#include "Inventory.h"
 
 class Battle
 {
 	int turn;
 
 
-	ReturnValue Start(Player& player);
+	void Start(Player& player,Inventory inven );
 	int Random_();
+	Item RandomItem(int r);
 };
 
-struct ReturnValue
-{
-	Item item;
-	int level;
-	int hp;
-};
+
 
