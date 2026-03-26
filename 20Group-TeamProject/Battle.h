@@ -1,17 +1,22 @@
 #pragma once
+#include "Player.h"
+#include "Item.h"
+#include "Zombie.h"
+#include <memory>
+
 class Battle
 {
 	int turn;
 
 
-	ReturnValue Start();
+	ReturnValue Start(Player& player);
 	int Random_();
 };
 
 struct ReturnValue
 {
-	item;
-	level;
-	hp;
+	Item item;
+	int level;
+	int hp;
 };
 

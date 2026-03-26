@@ -12,6 +12,8 @@ public:
 	void SetHp(int Inhp);
 	void SetDamage(int Indamage);
 	void SetExp(int Inexp);
+	void Heal(int value);
+	void IncreaseAttack(int value);
 	void PlayerStatus()const;
 	std::string GetNickName();
 	int GetLevel();
@@ -19,9 +21,12 @@ public:
 	int GetHp();
 	int GetDamage();
 	int GetExp();
+	void LevelUp();
+	void GainExp(int amount);
 protected:
 	std::string nick_name;
 	int level;
+	int maxLevel;
 	int maxHp;
 	int hp;
 	int damage;
