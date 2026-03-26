@@ -11,27 +11,41 @@ int Battle::Random_()
 
 	return random;
 }
-ReturnValue Battle::Start()
+ReturnValue Battle::Start(Player& player)
 {
 	
 
-	if (Player.GetHp() > 0)
+	if (player.GetHp() >= 0)
 	{
 		int RandomMonster = Random_() %3; // 0 ~ 2
+
+
+		std::unique_ptr<Zombie> monster;
 		switch (RandomMonster)
 		{
 		case 0:
-			break;
-		case 1:
-			break;
-		case 2:
+		{
+			monster = std::make_unique<ArmoredZombie>();
 			break;
 		}
+		case 1:
+		{
+			monster = std::make_unique<NormalZombie>();
+			break;
+		}
+		case 2:
+		{
+			monster = std::make_unique<FastZombie>();
+			break;
+		}
+		}
+	
+		
 		//플레이어 공격
 
 		
 
-		if (monster.IsAlive == false)
+		if (monster->IsAlive()  == false)
 		{
 			int randomItem = Random_();
 			int randomItemAmount = Random_() % 3;
