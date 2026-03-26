@@ -38,9 +38,9 @@ void Character::TakeDamage(int Damage)
 {
     hp -= Damage;
 
-    if (HP < 0)
+    if (hp < 0)
     {
-        HP = 0;
+        hp = 0;
     }
 }
 
