@@ -1,15 +1,27 @@
+ï»¿// Item.h
 #pragma once
 #include <string>
-#include "Character.h"
+#include "Player.h"
+
+enum class ItemType
+{
+	HP_POTION,
+	ATTACK_POTION
+};
+
 class Item
 {
 private:
 	std::string name;
-	int value; // È¸º¹·® or °ø°İ·Â Áõ°¡ µî
+	int value; // ÃˆÂ¸ÂºÂ¹Â·Â® or Â°Ã¸Â°ÃÂ·Ã‚ ÃÃµÂ°Â¡ ÂµÃ®
+	ItemType type;
 
 public:
-	Item(std::string name, int value);
+	Item(std::string name, int value, ItemType type);
 
-	void Use(Character& player);
+	std::string GetName() const;
+	ItemType GetType() const;
+
+	void Use(Player& player);
 
 };

@@ -1,35 +1,27 @@
 #pragma once
+#include "Character.h"
 #include <string>
-class Player
+
+class Player : public Character
 {
-public:
-	Player();
-	Player(std::string nick_name);
-	~Player();
-	void SetNickName(std::string Innick_name);
-	void SetLevel(int Inlevel);
-	void SetMaxHp(int InmaxHp);
-	void SetHp(int Inhp);
-	void SetDamage(int Indamage);
-	void SetExp(int Inexp);
-	void Heal(int value);
-	void IncreaseAttack(int value);
-	void PlayerStatus()const;
-	std::string GetNickName();
-	int GetLevel();
-	int GetMaxHp();
-	int GetHp();
-	int GetDamage();
-	int GetExp();
-	void LevelUp();
-	void GainExp(int amount);
-protected:
-	std::string nick_name;
+private:
 	int level;
 	int maxLevel;
-	int maxHp;
-	int hp;
-	int damage;
 	int exp;
+	int expToNextLevel;
+	int gold;
+
+public:
+	Player();
+
+	~Player();
+
+	int LevelUp();
+	void GainExp(int amount);
+	void Heal(int value);
+	void IncreaseAttack(int value);
+	void AddGold(int amount);
+	void ShowStatus() const;
+
 };
 
