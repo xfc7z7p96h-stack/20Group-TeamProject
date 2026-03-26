@@ -19,9 +19,11 @@ public:
 	int GetHp();
 	int GetDamage();
 	int GetExp();
+	int LevelUp();
 protected:
 	std::string nick_name;
 	int level;
+	int maxLevel;
 	int maxHp;
 	int hp;
 	int damage;
