@@ -12,6 +12,11 @@ std::string Item::GetName() const
     return name;
 }
 
+ItemType Item::GetType() const
+{
+    return type;
+}
+
 void Item::Use(Character& player)
 {
     if (type == ItemType::HP_POTION)

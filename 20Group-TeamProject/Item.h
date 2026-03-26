@@ -20,6 +20,7 @@ public:
 	Item(std::string name, int value, ItemType type);
 
 	std::string GetName() const;
+	ItemType GetType() const;
 
 	void Use(Character& player);
 

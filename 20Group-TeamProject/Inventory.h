@@ -15,6 +15,6 @@ public:
 	void AddItem(const Item& item);
 	void UseItem(int index, Character& target);
 	void ShowInventory() const;
-
+	void AddGold(int value);
 };
 
