@@ -22,8 +22,7 @@ public:
         int inAttack = 30,
         int inExp = 0,
         int inGold = 0,
-        int inExpToNextLevel = 100),
-        ~Character();
+        int inExpToNextLevel = 100);
 
     virtual ~Character();
 

@@ -7,10 +7,18 @@ Character::Character(string inName, int inLevel, int inHp, int inMaxHp, int inAt
 {
 }
 
-Character::~Character() {}
+Character::~Character(){}
 
 void Character::ShowStatus() const
 {
+    cout << "==================== Status ====================" << endl;
+    cout << "Player : " << name << endl;
+    cout << "Level : " << level << endl;
+    cout << "HP : " << hp << " / " << maxHp << endl;
+    cout << "공격력 : " << attack << endl;
+    cout << "경험치 : " << exp << " / " << expToNextLevel << endl;
+    cout << "Gold : " << gold << endl;
+    cout << "================================================" << endl;
 }
 
 void Character::GainExp(int amount)
