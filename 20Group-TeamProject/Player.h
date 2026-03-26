@@ -21,7 +21,8 @@ public:
 	int GetHp();
 	int GetDamage();
 	int GetExp();
-	int LevelUp();
+	void LevelUp();
+	void GainExp(int amount);
 protected:
 	std::string nick_name;
 	int level;

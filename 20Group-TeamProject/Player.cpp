@@ -1,4 +1,3 @@
-#pragma once
 #include "Player.h"
 #include <iostream>
 #include <string>
@@ -69,6 +68,30 @@ void Heal(int value)
 		hp += value;
 	}
 }
+
+void Player::GainExp(int amount)
+{
+	if (level >= 10)
+	{
+		std::cout << nick_name << "님은 이미 최대 레벨입니다. 경험치를 추가로 획득하지 않습니다." << std::endl;
+		return;
+	}
+
+	exp += amount;
+	std::cout << nick_name << "님이 경험치를 획득하였습니다." << std::endl;
+
+	while (level < 10 && exp >= expToNextLevel)
+	{
+		exp -= expToNextLevel;
+		LevelUp();
+	}
+
+	if (level >= 10)
+	{
+		exp = 0;
+	}
+}
+
 void IncreaseAttack(int value)
 {
 	damage += value;
