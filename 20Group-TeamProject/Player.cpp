@@ -59,7 +59,15 @@ int Player::LevelUp()
 }
 void Heal(int value)
 {
-	hp += value;
+	if ((hp += value) >= maxHp)
+	{
+		hp = maxHp;
+		std::cout << "Ã¼·ÂÀÌ °¡µæ Ã¡½À´Ï´Ù" << std::endl;
+	}
+	else
+	{
+		hp += value;
+	}
 }
 void IncreaseAttack(int value)
 {
