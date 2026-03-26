@@ -39,23 +39,24 @@ void Player::SetExp(int Inexp)
 {
 	exp = Inexp;
 }
-int Player::LevelUp()
+void Player::LevelUp()
 {
-	if (exp >= 100)
+	if (level >= 10)
 	{
-		if (level == maxLevel)
-		{
-			exp = 0;
-			std::cout << "최대 레벨에 도달했습니다." << std::endl;
-		}
-		else
-		{
-			exp -= 100;
-			level += 1;
-		}
+		cout << nick_name << "님은 이미 최대 레벨입니다." << endl;
+		return;
 	}
-	return level;
+
+	level++;
+
+	maxHp += level * 20;
+	attack += level * 5;
+	hp = maxHp;
+
+	std::cout << "레벨 업! " << nick_name << "님이 레벨 " << level << "을 달성하셨습니다." << std::endl;
+	std::cout << "레벨 업 보상으로 최대 체력과 공격력이 증가하고, 체력이 회복되었습니다." << std::endl;
 }
+
 void Heal(int value)
 {
 	if ((hp += value) >= maxHp)
