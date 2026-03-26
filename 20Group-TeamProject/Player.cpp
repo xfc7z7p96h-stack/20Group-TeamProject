@@ -1,4 +1,3 @@
-#pragma once
 #include "Player.h"
 #include <iostream>
 #include <string>
@@ -8,7 +7,7 @@ Player::Player()
 
 }
 
-Player::Player(std::string Innick_name) : nick_name(Innick_name), level(1), maxHp(200), hp(200), damage(30), exp(0)
+Player::Player(std::string Innick_name) : nick_name(Innick_name), maxLevel(10), level(1), maxHp(200), hp(200), damage(30), exp(0)
 {
 
 }
@@ -40,7 +39,63 @@ void Player::SetExp(int Inexp)
 {
 	exp = Inexp;
 }
+int Player::LevelUp()
+{
+	if (exp >= 100)
+	{
+		if (level == maxLevel)
+		{
+			exp = 0;
+			std::cout << "최대 레벨에 도달했습니다." << std::endl;
+		}
+		else
+		{
+			exp -= 100;
+			level += 1;
+		}
+	}
+	return level;
+}
+void Heal(int value)
+{
+	if ((hp += value) >= maxHp)
+	{
+		hp = maxHp;
+		std::cout << "체력이 가득 찼습니다" << std::endl;
+	}
+	else
+	{
+		hp += value;
+	}
+}
 
+void Player::GainExp(int amount)
+{
+	if (level >= 10)
+	{
+		std::cout << nick_name << "님은 이미 최대 레벨입니다. 경험치를 추가로 획득하지 않습니다." << std::endl;
+		return;
+	}
+
+	exp += amount;
+	std::cout << nick_name << "님이 경험치를 획득하였습니다." << std::endl;
+
+	while (level < 10 && exp >= expToNextLevel)
+	{
+		exp -= expToNextLevel;
+		LevelUp();
+	}
+
+	if (level >= 10)
+	{
+		exp = 0;
+	}
+}
+
+void IncreaseAttack(int value)
+{
+	damage += value;
+}
 std::string Player::GetNickName()
 {
 	return nick_name;
