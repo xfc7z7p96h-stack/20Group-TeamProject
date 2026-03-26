@@ -57,6 +57,14 @@ int Player::LevelUp()
 	}
 	return level;
 }
+void Heal(int value)
+{
+	hp += value;
+}
+void IncreaseAttack(int value)
+{
+	damage += value;
+}
 std::string Player::GetNickName()
 {
 	return nick_name;
