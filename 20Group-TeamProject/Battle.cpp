@@ -139,7 +139,7 @@ void Battle::Encounter(Player& player, Inventory& inven)
                 }
                 else
                 {
-                    std::cout << "\n¼¦°Ç ÃÑ¾ËÀÌ ¾ø½À´Ï´Ù"
+                    std::cout << "\n¼¦°Ç ÃÑ¾ËÀÌ ¾ø½À´Ï´Ù";
                 }
             }
             else
