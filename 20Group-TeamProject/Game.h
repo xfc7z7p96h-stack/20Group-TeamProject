@@ -1,10 +1,16 @@
 #pragma once
 #include <iostream>
 #include "string.h"
+#include "Battle.h"
 
 class Game
 {
 private:
+
+    Battle battle;
+	Player player;
+	Inventory inven;
+
 
     std::string CurrentPlace;
     int CurrentFloor;

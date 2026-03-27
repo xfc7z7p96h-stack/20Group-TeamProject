@@ -133,7 +133,11 @@ void Game::FirstFloor_Corridor()
     // 1Ãþº¹µµ1Ãþº¹µµ1Ãþº¹µµ1Ãþº¹µµ1Ãþº¹µµ1Ãþº¹µµ
     // 1Ãþº¹µµ1Ãþº¹µµ1Ãþº¹µµ1Ãþº¹µµ1Ãþº¹µµ1Ãþº¹µµ
 
+
+
     CurrentPlace = "°Ç¹° 1Ãþ [ º¹µµ ]";
+
+   
 
     while (CurrentFloor == 1)
     {
@@ -196,6 +200,14 @@ void Game::FirstFloor_Corridor()
             break;
 
         case 'd':
+            system("cls");
+
+            if (battle.RandomRange(0, 100) < 1000)
+            {
+                battle.Encounter(player, inven);
+            }
+
+            system("cls");
             FirstFloor_CorridorEnd();
             break;
 
@@ -258,7 +270,7 @@ void Game::FirstFloor_storage()
                 Logger::Log("Ã¼ÀÎ Ä¿ÅÍ¸¦ ¹ß°ßÇß´Ù. ³ìÀÌ Á» ½½¾úÁö¸¸ ¾îµò°¡ ¾µ °÷ÀÌ ÀÖÀ» °Í °°´Ù.\n");
                 bchaincutter = true;
             }
-			else if (secretRoomQuest == true)
+			else if (secretRoomQuest == false)
             {
                 Logger::Log("µüÈ÷ ´«¿¡ ¶ç´Â °ÍÀº ¾ø´Ù.\n");
             }
@@ -275,6 +287,14 @@ void Game::FirstFloor_storage()
             break;
 
         case 's':
+            system("cls");
+
+            if (battle.RandomRange(0, 100) < 1000)
+            {
+                battle.Encounter(player, inven);
+            }
+
+            system("cls");
             CurrentPlace = "°Ç¹° 1Ãþ [ º¹µµ ]";
             return;
 

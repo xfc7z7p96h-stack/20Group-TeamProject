@@ -9,7 +9,6 @@
 
 int main()
 {
-    Battle battle; // 생성자 호출용
     Game game;
 
     game.Run();
