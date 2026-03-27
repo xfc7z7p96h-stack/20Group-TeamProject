@@ -4,8 +4,6 @@
 
 void Inventory::AddItem(const Item& item)
 {
-    std::string typeName;
-
     if (items.size() >= maxSize)
     {
         std::cout << "ÀÎº¥Åä¸®¿¡ ÀÚ¸®°¡ ¾ø´Ù.\n";
@@ -13,32 +11,7 @@ void Inventory::AddItem(const Item& item)
     }
 
     items.push_back(item);
-
-    if (item.GetType() == ItemType::HP_POTION)
-    {
-        typeName = "Çãºê";
-    }
-    else if (item.GetType() == ItemType::ATTACK_POTION)
-    {
-        typeName = "¿¬¸¶Á¦";
-    }
-    else if (item.GetType() == ItemType::PISTOL)
-    {
-        typeName = "±ÇÃÑ";
-    }
-    else if (item.GetType() == ItemType::PISTOL_AMMO)
-    {
-        typeName = "±ÇÃÑ Åº¾ËÁý";
-    }
-    else if (item.GetType() == ItemType::SHOTGUN)
-    {
-        typeName = "¼¦°Ç";
-    }
-    else if (item.GetType() == ItemType::SHOTGUN_AMMO)
-    {
-        typeName = "¼¦°Ç Åº¾ËÁý";
-    }
-    std::cout << typeName << " È¹µæ!\n";
+    std::cout << item.GetName() << " È¹µæ!\n";
 }
 
 void Inventory::AddGold(int value)
