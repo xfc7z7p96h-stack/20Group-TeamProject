@@ -1,5 +1,6 @@
 #include "Game.h"
 #include "Logger.h"
+#include "Intro.h"
 #include "Battle.h"
 #include <conio.h>
 #include <windows.h>
@@ -21,6 +22,7 @@ void Game::ShowStatus()
 
 void Game::Run()
 {
+    PlayIntro();
 
     while (CurrentFloor == 0)
     {
