@@ -10,7 +10,8 @@ enum class ItemType
 	PISTOL,
 	SHOTGUN,
 	PISTOL_AMMO,
-	SHOTGUN_AMMO
+	SHOTGUN_AMMO,
+	KNIFE
 };
 
 class Item

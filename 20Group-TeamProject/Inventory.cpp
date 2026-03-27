@@ -2,6 +2,11 @@
 #include "Inventory.h"
 #include <iostream>
 
+Inventory::Inventory()
+{
+    items.push_back(Item("칼", 0, ItemType::KNIFE));
+}
+
 void Inventory::AddItem(const Item& item)
 {
     if (items.size() >= maxSize)
@@ -27,8 +32,14 @@ void Inventory::UseItem(int index, Player& target)
         std::cout << "잘못 선택했다.\n";
         return;
     }
-
+    
     ItemType type = items[index].GetType();
+
+    if (type == ItemType::KNIFE)
+    {
+        std::cout << "경찰 임용 선물로 받은 보급형 서바이벌 나이프.\n";
+        return;
+    }
 
     if (type == ItemType::PISTOL)
     {

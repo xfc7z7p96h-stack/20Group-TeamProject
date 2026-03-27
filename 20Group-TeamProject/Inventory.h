@@ -12,6 +12,8 @@ private:
 	int gold = 0;
 
 public:
+	Inventory();
+
 	void AddItem(const Item& item);
 	void UseItem(int index, Player& target);
 	void ShowInventory() const;
