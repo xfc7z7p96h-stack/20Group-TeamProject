@@ -66,36 +66,66 @@ void Battle::Encounter(Player& player, Inventory& inven)
 
     // 플레이어 공격
     int playerAnswer;
-    std::cout << "\n[1.맨손 공격 " << " /" << "2.인벤토리 " << " /" << "3.총으로 공격]" << std::endl;
+    int manager0 = 0;
+    do
+    {
+        std::cout << "\n[1.맨손 공격 " << " /" << "2.인벤토리 " << " /" << "3.총으로 공격]" << std::endl;
 
-    std::cin >> playerAnswer;
-    switch (playerAnswer)
-    {
-    case 1:
-    {
-        monster->TakeDamage(player.GetAttack()); // 맨손 떄리기
-        break;
-    }
-    case 2:
-    {
-        if (inven.GetSize < 0)
+        std::cin >> playerAnswer;
+        switch (playerAnswer)
         {
-            std::cout << "\n인벤토리가 비었습니다\n";
-        }
-        else
+        case 1:
         {
-            inven.ShowInventory();
-            std::cout << "\n몇번쨰 아이템을 사용하시겠습니다??" << "\nanswer:";
-            std::cin >> playerAnswer;
-            inven.UseItem(playerAnswer, player);
+            monster->TakeDamage(player.GetAttack()); // 맨손 떄리기
+            manager0 = 0;
+            break;
         }
-    }
+        case 2:
+        {
+            if (inven.GetSize() < 0)
+            {
+                std::cout << "\n인벤토리가 비었습니다\n";
+                manager0 = 1;
+            }
+            else
+            {
+                inven.ShowInventory();
+                int manager1;
+                do
+                {
+                    std::cout << "\n몇번쨰 아이템을 사용하시겠습니다??" << "\nanswer:";
+                    std::cin >> playerAnswer;
+                    if (playerAnswer > inven.GetSize() && playerAnswer < 0)
+                    {
+                        manager1 = 1;
+                    }
+                    else
+                    {
+                        manager1 = 0;
+                    }
+                } while (manager1);
+                inven.UseItem(playerAnswer, player);
+                manager0 = 0;
+            }
+        }
 
-    case 3:
-    {
-        if()// 총 구현
-    }
-    }
+        case 3:
+        {
+            if (player.IsArmed())// 총 구현 총알이 없으면 총은 자동으로 인벤토리로
+            {
+                int gunDamage = player.GetAttack() + 10; // 총대미지 기본 설정 벨런스 조절시ㅣ 여기 조정
+                monster->TakeDamage(gunDamage);
+                manager0 = 0;
+            }
+            else
+            {
+                std::cout << "\n총을 장착하고 있지 않습니다!!";
+                manager0 = 1;
+            }
+        }
+        }
+    } while (manager0);
+
 
 
     std::cout << "\n공격!" << std::endl;
