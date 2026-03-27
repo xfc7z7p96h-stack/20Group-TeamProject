@@ -25,22 +25,32 @@ void Player::ShowStatus() const
 	std::cout << "================================================" << std::endl;
 }
 
-int Player::LevelUp()
+void Player::LevelUp()
 {
-	if (exp >= 100)
+	if (level >= maxLevel)
 	{
-		if (level == maxLevel)
+		exp = 0;
+		std::cout << "최대 레벨에 도달했습니다." << std::endl;
+		return;
+	}
+
+	while (exp >= expToNextLevel)
+	{
+		exp -= expToNextLevel;
+		level++;
+
+		maxHp += level * 20;
+		damage += level * 5;
+		hp = maxHp;
+
+		std::cout << "레벨 업! 현재 레벨: " << level << std::endl;
+
+		if (level >= maxLevel)
 		{
 			exp = 0;
-			std::cout << "최대 레벨에 도달했습니다." << std::endl;
-		}
-		else
-		{
-			exp -= 100;
-			level += 1;
+			break;
 		}
 	}
-	return level;
 }
 
 
