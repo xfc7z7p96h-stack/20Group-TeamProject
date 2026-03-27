@@ -13,6 +13,19 @@ Game::Game()
 	CurrentFloor = 0; // 층 정보 초기화
     bchaincutter = false;
 	firstfloorclear = false;
+    secretRoom = false;
+}
+
+void Game::ShowHelp()
+{
+    Logger::Log("새로운 방이나 다른 층 진입 시, 일정 확률로 살아있는 시체와 마주하게 됩니다.");
+    Logger::Log("근접 공격은 횟수에 제한이 없지만, 당신은 반드시 반격을 당하게 됩니다.");
+    Logger::Log("권총 또는 샷건으로 공격 시, 총알을 소비하지만 반격은 당하지 않습니다.");
+    Logger::Log("싸울지 도망칠지는 당신의 몫입니다.\n");
+    Logger::Log("[ 단축키 ]");
+    Logger::Log("[I] 인벤토리");
+    Logger::Log("(아무 키나 누르세요.)");
+    _getch();
 }
 
 void Game::ShowStatus()
@@ -40,7 +53,7 @@ void Game::Run()
         Logger::Space();
         Logger::Log("내 본능이 그렇게 말하고 있었다.");
         Logger::Space();
-        Logger::Log("[W] 건물에 들어간다.\n");
+        Logger::Log("( [W] 건물에 들어간다. )\n");
 
         char Input = _getch();
         Input = std::tolower(Input);
@@ -96,6 +109,7 @@ Logger::Space();
 Logger::Log("'지도...?'");
 Logger::Space();
 Logger::Log("나는 벽에 붙어있던 건물 지도를 챙겼다.");
+Logger::Log("(아무 키나 누르세요.)");
 
 _getch();
        
@@ -138,16 +152,7 @@ void Game::FirstFloor_Corridor()
         switch (Input)
         {
         case 'h':
-            Logger::Log("새로운 방이나 다른 층 진입 시, 일정 확률로 살아있는 시체와 마주하게 됩니다.");
-            Logger::Log("근접 공격은 횟수에 제한이 없지만, 당신은 반드시 반격을 당하게 됩니다.");
-            Logger::Log("권총 또는 샷건으로 공격 시, 총알을 소비하지만 반격은 당하지 않습니다.");
-            Logger::Log("싸울지 도망칠지는 당신의 몫입니다.\n");
-            Logger::Log("[ 단축키 ]");
-            Logger::Log("[I] 인벤토리");
-            Logger::Log("(아무 키나 누르세요.)");
-
-            _getch();
-
+            ShowHelp();
             break;
 
         case 'e':
@@ -220,16 +225,7 @@ void Game::FirstFloor_storage()
         switch (Input)
         {
         case 'h':
-            Logger::Log("새로운 방이나 다른 층 진입 시, 일정 확률로 살아있는 시체와 마주하게 됩니다.");
-            Logger::Log("근접 공격은 횟수에 제한이 없지만, 당신은 반드시 반격을 당하게 됩니다.");
-            Logger::Log("권총 또는 샷건으로 공격 시, 총알을 소비하지만 반격은 당하지 않습니다.");
-            Logger::Log("싸울지 도망칠지는 당신의 몫입니다.\n");
-            Logger::Log("[ 단축키 ]");
-            Logger::Log("[I] 인벤토리");
-            Logger::Log("(아무 키나 누르세요.)");
-
-            _getch();
-
+            ShowHelp();
             break;
 
         case 'e':
@@ -305,16 +301,7 @@ void Game::FirstFloor_CorridorEnd()
         switch (Input)
         {
         case 'h':
-            Logger::Log("새로운 방이나 다른 층 진입 시, 일정 확률로 살아있는 시체와 마주하게 됩니다.");
-            Logger::Log("근접 공격은 횟수에 제한이 없지만, 당신은 반드시 반격을 당하게 됩니다.");
-            Logger::Log("권총 또는 샷건으로 공격 시, 총알을 소비하지만 반격은 당하지 않습니다.");
-            Logger::Log("싸울지 도망칠지는 당신의 몫입니다.\n");
-            Logger::Log("[ 단축키 ]");
-            Logger::Log("[I] 인벤토리");
-            Logger::Log("(아무 키나 누르세요.)");
-
-            _getch();
-
+            ShowHelp();
             break;
 
         case 'e':
@@ -332,11 +319,18 @@ void Game::FirstFloor_CorridorEnd()
         case 's':
             if (firstfloorclear == true)
             {
-                Logger::Log("2층 고고\n");
+                CurrentFloor = 2;
+                SecondFloor_Lobby();
+                return;
             }
             else if (bchaincutter == true)
             {
+                firstfloorclear = true;
+
                 Logger::Log("쇠사슬을 끊어서 철문을 열었다. 2층으로 올라갈 수 있게 되었다.\n");
+                _getch();
+                CurrentFloor = 2;
+                SecondFloor();
                 firstfloorclear = true;
             }
             else 
@@ -344,6 +338,101 @@ void Game::FirstFloor_CorridorEnd()
                 Logger::Log("2층으로 가는 계단은 철문으로 막혀있다. 손잡이쪽의 쇠사슬을 끊으면 열 수 있을 것 같다.\n");
             }
             Logger::Log("(아무 키나 누르세요.)");
+            _getch();
+            break;
+
+        case 'a':
+            CurrentPlace = "건물 1층 [ 복도 ]";
+            return;
+
+        case 'd':
+            Logger::Log("벽에 검붉은 얼룩이 곳곳에 묻어있다.\n");
+            Logger::Log("(아무 키나 누르세요)");
+            _getch();
+            break;
+
+        default:
+            std::cout << "딴 짓하고 있을 때가 아니다.(아무 키나 누르세요)\n";
+            _getch();
+            break;
+        }
+    }
+}
+
+void Game::SecondFloor()
+{
+    Logger::Log("2층으로 올라오니 케케묵은 냄새가 더 심해졌다.");
+    Logger::Space();
+    Logger::Log("아라라랄라라라");
+    Logger::Space();
+    Logger::Log("크크루삥빵뽕");
+    Logger::Space();
+    Logger::Log("끼얏후");
+    Logger::Log("(아무 키나 누르세요)");
+
+    _getch();
+
+    SecondFloor_Lobby();
+}
+
+void Game::SecondFloor_Lobby()
+{
+    CurrentPlace = "건물 2층 [ 로비 ]";
+
+    while (CurrentFloor == 2)
+    {
+        system("cls");
+
+        ShowStatus();
+
+        if (secretRoom == false)
+        {
+            Logger::Log("            1층           ");
+            Logger::Log("             ↑              ");
+            Logger::Log("             |             ");
+            Logger::Log("화장실  ←   ▶로비  → 미팅룸    ");
+            Logger::Log("             |              ");
+            Logger::Log("             ↓");
+            Logger::Log("            3층");
+        }
+        else
+        {
+            Logger::Log("            1층     탕비실    ");
+            Logger::Log("             ↑        ↑      ");
+            Logger::Log("             |        |      ");
+            Logger::Log("화장실  ←   ▶로비  → 미팅룸    ");
+            Logger::Log("             |              ");
+            Logger::Log("             ↓");
+            Logger::Log("            3층");
+        }
+
+        char Input = _getch();
+        Input = std::tolower(Input);
+
+        system("cls");
+
+        switch (Input)
+        {
+        case 'h':
+            ShowHelp();
+            break;
+
+        case 'e':
+            Logger::Log("넓은 로비의 중앙에는 큰 원기둥이 천장을 받히고 있었다.\n");
+            Logger::Log("그리고 그 곳에는 피로 그린 듯한 숫자(8)가 있었다..\n");
+            Logger::Log("(아무 키나 누르세요.)");
+            _getch();
+            break;
+
+        case 'w':
+            CurrentFloor = 1;
+            FirstFloor_CorridorEnd();
+            _getch();
+            break;
+
+        case 's':
+            Logger::Log("당연하게도 잠겨있다..열쇠가 필요하다.\n");
+            Logger::Log("(아무 키나 누르세요)");
             _getch();
             break;
 
