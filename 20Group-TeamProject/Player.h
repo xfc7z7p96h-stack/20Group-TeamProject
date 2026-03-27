@@ -10,7 +10,9 @@ private:
 	int exp;
 	int expToNextLevel;
 	int gold;
-
+	std::string weapon;
+	bool pistolIsArmed;
+	bool shotgunIsArmed;
 public:
 	Player();
 
@@ -22,5 +24,7 @@ public:
 	void IncreaseAttack(int value);
 	void AddGold(int amount);
 	void ShowStatus() const;
-
+	void ResetNickName();
+	void GetRest();
+	void WeaponType();
 };
