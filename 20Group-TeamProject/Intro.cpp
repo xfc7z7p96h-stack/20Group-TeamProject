@@ -24,7 +24,7 @@ void TypeLine(const std::string& text, int delay = 30)
 void PlayIntro()
 {
     Logger::Line();
-    TypeLine("        BIOHAZARD : RACCOON CITY", 20);
+    TypeLine("           BIOHAZARD : RACCOON CITY", 20);
     Logger::Line();
     Logger::Space();
 
@@ -67,7 +67,7 @@ void PlayIntro()
     Logger::Space();
 
     Logger::Line();
-    Logger::Log(">> ENTER 키를 눌러 게임을 시작하세요.");
+    Logger::Log(">>      ENTER 키를 눌러 게임을 시작하세요.");
     Logger::Line();
 
     std::cin.get();

@@ -21,6 +21,7 @@ void Game::ShowStatus()
     std::cout << "현재 위치 : " << CurrentPlace << "\n";
     std::cout << "[W] ↑  [S] ↓  [A] ←  [D] →  [E] 방 조사  [H] 도움말\n";
     Logger::Line();
+    Logger::Space();
 }
 
 void Game::Run()

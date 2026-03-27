@@ -9,7 +9,7 @@ void Logger::Log(const std::string& message)
 
 void Logger::Line()
 {
-    std::cout << "====================================" << std::endl;
+    std::cout << "==================================================" << std::endl;
 }
 
 void Logger::Space()
