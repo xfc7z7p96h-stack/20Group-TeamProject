@@ -69,7 +69,7 @@ void Battle::Encounter(Player& player, Inventory& inven)
     int manager0 = 0;
     do
     {
-        std::cout << "\n[1.맨손 공격 " << " /" << "2.인벤토리 " << " /" << "3.총으로 공격]" << std::endl;
+        std::cout << "\n[1.맨손 공격 " << " /" << "2.인벤토리 " << " /" << "3.총으로 공격 " << " /" << "4.칼로 찌르기]" << std::endl;
 
         std::cin >> playerAnswer;
         switch (playerAnswer)
@@ -107,6 +107,7 @@ void Battle::Encounter(Player& player, Inventory& inven)
                 inven.UseItem(playerAnswer, player);
                 manager0 = 0;
             }
+            break;
         }
 
         case 3:
@@ -122,7 +123,16 @@ void Battle::Encounter(Player& player, Inventory& inven)
                 std::cout << "\n총을 장착하고 있지 않습니다!!";
                 manager0 = 1;
             }
+            break;
         }
+        case 4:
+        {
+
+        }
+        default:
+            std::cout << "\n숫자를 잘못 입력하셨습니다 다시 입력해 주세요!!!";
+            manager0 = 1;
+            break;
         }
     } while (manager0);
 
