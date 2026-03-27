@@ -65,8 +65,42 @@ void Battle::Encounter(Player& player, Inventory& inven)
     std::cout << "공격력: " << monster->GetAttack() << std::endl;
 
     // 플레이어 공격
+    int playerAnswer;
+    std::cout << "\n[1.맨손 공격 " << " /" << "2.인벤토리 " << " /" << "3.총으로 공격]" << std::endl;
+
+    std::cin >> playerAnswer;
+    switch (playerAnswer)
+    {
+    case 1:
+    {
+        monster->TakeDamage(player.GetAttack()); // 맨손 떄리기
+        break;
+    }
+    case 2:
+    {
+        if (inven.GetSize < 0)
+        {
+            std::cout << "\n인벤토리가 비었습니다\n";
+        }
+        else
+        {
+            inven.ShowInventory();
+            std::cout << "\n몇번쨰 아이템을 사용하시겠습니다??" << "\nanswer:";
+            std::cin >> playerAnswer;
+            inven.UseItem(playerAnswer, player);
+        }
+    }
+
+    case 3:
+    {
+        if()// 총 구현
+    }
+    }
+
+
     std::cout << "\n공격!" << std::endl;
-    monster->TakeDamage(player.GetAttack());
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // 버퍼 비우기
+   
 
     std::cout << monster->GetName() << "의 남은 HP: " << monster->GetHp() << "/" << monster->GetMaxHp() << std::endl;
 
@@ -100,12 +134,16 @@ void Battle::Encounter(Player& player, Inventory& inven)
 
 Item Battle::RandomItem()
 {
-	switch (RandomRange(0, 1)) // 0 ~ 1 사이의 랜덤값 생성
+	switch (RandomRange(0, 3)) // 0 ~ 1 사이의 랜덤값 생성
     {
     case 0:
         return Item("HP Potion", 50, ItemType::HP_POTION);
     case 1:
         return Item("Attack Potion", 10, ItemType::ATTACK_POTION);
+    case 2:
+        return Item("Shotgun Ammo", RandomRange(1, 3), ItemType::SHOTGUN_AMMO);
+    case 3:
+        return Item("Pistol Ammo", RandomRange(2, 3), ItemType::PISTOL_AMMO);
     }
 }
 
