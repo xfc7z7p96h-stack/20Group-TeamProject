@@ -4,7 +4,7 @@
 #include <string>
 
 Player::Player()
-	: Character("Player", 200, 200, 30), level(1), maxLevel(10), exp(0), expToNextLevel(100), gold(0)
+	: Character("Leon Scott Kennedy", 200, 200, 30), level(1), maxLevel(10), exp(0), expToNextLevel(100), gold(0)
 {
 
 }

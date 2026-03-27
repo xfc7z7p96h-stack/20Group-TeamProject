@@ -6,14 +6,19 @@
 enum class ItemType
 {
 	HP_POTION,
-	ATTACK_POTION
+	ATTACK_POTION,
+	PISTOL,
+	SHOTGUN,
+	PISTOL_AMMO,
+	SHOTGUN_AMMO,
+	KNIFE
 };
 
 class Item
 {
 private:
 	std::string name;
-	int value; // È¸º¹·® or °ø°Ý·Â Áõ°¡ µî
+	int value; // 회복량,공격력증가량,총알의 수
 	ItemType type;
 
 public:
@@ -21,7 +26,14 @@ public:
 
 	std::string GetName() const;
 	ItemType GetType() const;
+	int GetValue() const; //남은 총알 확인용
+	void SetValue(int newValue); //총알 사용 시 호출
 
 	void Use(Player& player);
-
 };
+
+//객체 생성 시(아이템 획득)
+//Item("권총", 0, ItemType::PISTOL);
+//Item("샷건", 0, ItemType::SHOTGUN);
+//Item("권총총알집", 10, ItemType::PISTOL_AMMO);
+//Item("샷건총알집", 5, ItemType::SHOTGUN_AMMO);
