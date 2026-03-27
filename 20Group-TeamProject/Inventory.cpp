@@ -2,10 +2,13 @@
 #include "Inventory.h"
 #include <iostream>
 
+Inventory::Inventory()
+{
+    items.push_back(Item("칼", 0, ItemType::KNIFE));
+}
+
 void Inventory::AddItem(const Item& item)
 {
-    std::string typeName;
-
     if (items.size() >= maxSize)
     {
         std::cout << "인벤토리에 자리가 없다.\n";
@@ -13,16 +16,7 @@ void Inventory::AddItem(const Item& item)
     }
 
     items.push_back(item);
-
-    if (item.GetType() == ItemType::HP_POTION)
-    {
-        typeName = "허브";
-    }
-    else if (item.GetType() == ItemType::ATTACK_POTION)
-    {
-        typeName = "연마제";
-    }
-    std::cout << typeName << "를 획득했다!\n";
+    std::cout << item.GetName() << " 획득!\n";
 }
 
 void Inventory::AddGold(int value)
@@ -38,9 +32,148 @@ void Inventory::UseItem(int index, Player& target)
         std::cout << "잘못 선택했다.\n";
         return;
     }
+    
+    ItemType type = items[index].GetType();
+
+    if (type == ItemType::KNIFE)
+    {
+        std::cout << "경찰 임용 선물로 받은 보급형 서바이벌 나이프.\n";
+        return;
+    }
+
+    if (type == ItemType::PISTOL)
+    {
+        std::cout << "권총은 전투 중 사용할 수 있다.\n";
+        return;
+    }
+
+    if (type == ItemType::SHOTGUN)
+    {
+        std::cout << "샷건은 전투 중 사용할 수 있다.\n";
+        return;
+    }
+
+    if (type == ItemType::PISTOL_AMMO)
+    {
+        std::cout << "현재 권총 탄알집 잔탄: " << items[index].GetValue() << "발\n";
+        return;
+    }
+
+    if (type == ItemType::SHOTGUN_AMMO)
+    {
+        std::cout << "현재 샷건 탄알집 잔탄: " << items[index].GetValue() << "발\n";
+        return;
+    }
 
     items[index].Use(target);
     items.erase(items.begin() + index);
+}
+
+int Inventory::GetSize() const
+{
+    return items.size();
+}
+
+bool Inventory::HasItem(ItemType type) const
+{
+    for (const auto& item : items)
+    {
+        if (item.GetType() == type)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool Inventory::HasPistol() const
+{
+    return HasItem(ItemType::PISTOL);
+}
+
+bool Inventory::HasShotgun() const
+{
+    return HasItem(ItemType::SHOTGUN);
+}
+
+int Inventory::GetPistolAmmo() const
+{
+    for (const auto& item : items)
+    {
+        if (item.GetType() == ItemType::PISTOL_AMMO)
+        {
+            return item.GetValue();
+        }
+    }
+    return 0;
+}
+
+int Inventory::GetShotgunAmmo() const
+{
+    for (const auto& item : items)
+    {
+        if (item.GetType() == ItemType::SHOTGUN_AMMO)
+        {
+            return item.GetValue();
+        }
+    }
+    return 0;
+}                       
+
+bool Inventory::ConsumePistolAmmo()
+{
+    for (int i = 0; i < items.size(); i++)
+    {
+        if (items[i].GetType() == ItemType::PISTOL_AMMO)
+        {
+            int currentAmmo = items[i].GetValue();
+
+            if (currentAmmo <= 0)
+            {
+                items.erase(items.begin() + i);
+                return false;
+            }
+
+            items[i].SetValue(currentAmmo - 1);
+
+            if (items[i].GetValue() <= 0)
+            {
+                items.erase(items.begin() + i);
+            }
+
+            return true;
+        }
+    }
+
+    return false;
+}
+
+bool Inventory::ConsumeShotgunAmmo()
+{
+    for (int i = 0; i < items.size(); i++)
+    {
+        if (items[i].GetType() == ItemType::SHOTGUN_AMMO)
+        {
+            int currentAmmo = items[i].GetValue();
+
+            if (currentAmmo <= 0)
+            {
+                items.erase(items.begin() + i);
+                return false;
+            }
+
+            items[i].SetValue(currentAmmo - 1);
+
+            if (items[i].GetValue() <= 0)
+            {
+                items.erase(items.begin() + i);
+            }
+
+            return true;
+        }
+    }
+
+    return false;
 }
 
 void Inventory::ShowInventory() const
