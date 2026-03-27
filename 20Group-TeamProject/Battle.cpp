@@ -69,14 +69,15 @@ void Battle::Encounter(Player& player, Inventory& inven)
     int manager0 = 0;
     do
     {
-        std::cout << "\n[1.맨손 공격 " << " /" << "2.인벤토리 " << " /" << "3.총으로 공격 " << " /" << "4.칼로 찌르기]" << std::endl;
+        std::cout << "\n[1.칼로 찌르기! " << " /" << "2.인벤토리 " << " /" << "3.총으로 공격!]" << std::endl;
 
         std::cin >> playerAnswer;
         switch (playerAnswer)
         {
         case 1:
         {
-            monster->TakeDamage(player.GetAttack()); // 맨손 떄리기
+            monster->TakeDamage(player.GetAttack()); // 칼로 찌르기
+            monster->ShowStatus();
             manager0 = 0;
             break;
         }
@@ -112,11 +113,34 @@ void Battle::Encounter(Player& player, Inventory& inven)
 
         case 3:
         {
-            if (player.IsArmed())// 총 구현 총알이 없으면 총은 자동으로 인벤토리로
+            if (inven.HasPistol())// 총 구현 총알이 없으면 총은 자동으로 인벤토리로
             {
-                int gunDamage = player.GetAttack() + 10; // 총대미지 기본 설정 벨런스 조절시ㅣ 여기 조정
-                monster->TakeDamage(gunDamage);
-                manager0 = 0;
+                if (inven.GetPistolAmmo() > 0)
+                {
+                    int gunDamage = player.GetAttack() + 10; // 총대미지 기본 설정 벨런스 조절시ㅣ 여기 조정
+                    monster->TakeDamage(gunDamage);
+                    monster->ShowStatus();
+                    manager0 = 0;
+                }
+                else
+                {
+                    std::cout << "\n총알이 없습니다!!";
+                    manager0 = 1;
+                }
+            }
+            else if (inven.HasShotgun())
+            {
+                if (inven.GetShotgunAmmo() > 0)
+                {
+                    int gunDamage = player.GetAttack() + 25; // 총대미지 기본 설정 벨런스 조절시ㅣ 여기 조정
+                    monster->TakeDamage(gunDamage);
+                    monster->ShowStatus();
+                    manager0 = 0;
+                }
+                else
+                {
+                    std::cout << "\n샷건 총알이 없습니다"
+                }
             }
             else
             {
@@ -124,10 +148,6 @@ void Battle::Encounter(Player& player, Inventory& inven)
                 manager0 = 1;
             }
             break;
-        }
-        case 4:
-        {
-
         }
         default:
             std::cout << "\n숫자를 잘못 입력하셨습니다 다시 입력해 주세요!!!";
