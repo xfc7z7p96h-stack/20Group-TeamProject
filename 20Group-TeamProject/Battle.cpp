@@ -65,8 +65,82 @@ void Battle::Encounter(Player& player, Inventory& inven)
     std::cout << "공격력: " << monster->GetAttack() << std::endl;
 
     // 플레이어 공격
+    int playerAnswer;
+    int manager0 = 0;
+    do
+    {
+        std::cout << "\n[1.맨손 공격 " << " /" << "2.인벤토리 " << " /" << "3.총으로 공격 " << " /" << "4.칼로 찌르기]" << std::endl;
+
+        std::cin >> playerAnswer;
+        switch (playerAnswer)
+        {
+        case 1:
+        {
+            monster->TakeDamage(player.GetAttack()); // 맨손 떄리기
+            manager0 = 0;
+            break;
+        }
+        case 2:
+        {
+            if (inven.GetSize() < 0)
+            {
+                std::cout << "\n인벤토리가 비었습니다\n";
+                manager0 = 1;
+            }
+            else
+            {
+                inven.ShowInventory();
+                int manager1;
+                do
+                {
+                    std::cout << "\n몇번쨰 아이템을 사용하시겠습니다??" << "\nanswer:";
+                    std::cin >> playerAnswer;
+                    if (playerAnswer > inven.GetSize() && playerAnswer < 0)
+                    {
+                        manager1 = 1;
+                    }
+                    else
+                    {
+                        manager1 = 0;
+                    }
+                } while (manager1);
+                inven.UseItem(playerAnswer, player);
+                manager0 = 0;
+            }
+            break;
+        }
+
+        case 3:
+        {
+            if (player.IsArmed())// 총 구현 총알이 없으면 총은 자동으로 인벤토리로
+            {
+                int gunDamage = player.GetAttack() + 10; // 총대미지 기본 설정 벨런스 조절시ㅣ 여기 조정
+                monster->TakeDamage(gunDamage);
+                manager0 = 0;
+            }
+            else
+            {
+                std::cout << "\n총을 장착하고 있지 않습니다!!";
+                manager0 = 1;
+            }
+            break;
+        }
+        case 4:
+        {
+
+        }
+        default:
+            std::cout << "\n숫자를 잘못 입력하셨습니다 다시 입력해 주세요!!!";
+            manager0 = 1;
+            break;
+        }
+    } while (manager0);
+
+
+
     std::cout << "\n공격!" << std::endl;
-    monster->TakeDamage(player.GetAttack());
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // 버퍼 비우기
+   
 
     std::cout << monster->GetName() << "의 남은 HP: " << monster->GetHp() << "/" << monster->GetMaxHp() << std::endl;
 
@@ -100,12 +174,16 @@ void Battle::Encounter(Player& player, Inventory& inven)
 
 Item Battle::RandomItem()
 {
-	switch (RandomRange(0, 1)) // 0 ~ 1 사이의 랜덤값 생성
+	switch (RandomRange(0, 3)) // 0 ~ 1 사이의 랜덤값 생성
     {
     case 0:
         return Item("HP Potion", 50, ItemType::HP_POTION);
     case 1:
         return Item("Attack Potion", 10, ItemType::ATTACK_POTION);
+    case 2:
+        return Item("Shotgun Ammo", RandomRange(1, 3), ItemType::SHOTGUN_AMMO);
+    case 3:
+        return Item("Pistol Ammo", RandomRange(2, 3), ItemType::PISTOL_AMMO);
     }
 }
 
