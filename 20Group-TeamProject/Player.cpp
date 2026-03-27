@@ -30,48 +30,44 @@ void Player::LevelUp()
 	if (level >= maxLevel)
 	{
 		exp = 0;
-		std::cout << "최대 레벨에 도달했습니다." << std::endl;
+		std::cout << "최대 레벨에 도달했습니다.\n";
 		return;
 	}
 
-	while (exp >= expToNextLevel)
+	while (level < maxLevel && exp >= expToNextLevel)
 	{
 		exp -= expToNextLevel;
 		level++;
 
 		maxHp += level * 20;
-		damage += level * 5;
+		attack += level * 5;
 		hp = maxHp;
 
-		std::cout << "레벨 업! 현재 레벨: " << level << std::endl;
+		std::cout << "레벨 업! 현재 레벨: " << level << "\n";
 
 		if (level >= maxLevel)
 		{
 			exp = 0;
+			std::cout << "최대 레벨에 도달했습니다.\n";
 			break;
 		}
 	}
 }
 
-
 void Player::GainExp(int amount)
 {
-	if (level >= 10)
+	if (level >= maxLevel)
 	{
-		std::cout << name << "님은 이미 최대 레벨입니다. 경험치를 추가로 획득하지 않습니다." << std::endl;
+		std::cout << name << "님은 이미 최대 레벨입니다.\n";
 		return;
 	}
 
 	exp += amount;
-	std::cout << name << "님이 경험치를 획득하였습니다." << std::endl;
+	std::cout << name << "님이 경험치를 " << amount << " 획득하였습니다.\n";
 
-	while (level < 10 && exp >= expToNextLevel)
-	{
-		exp -= expToNextLevel;
-		LevelUp();
-	}
+	LevelUp();
 
-	if (level >= 10)
+	if (level >= maxLevel)
 	{
 		exp = 0;
 	}

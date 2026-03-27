@@ -16,7 +16,7 @@ public:
 
 	~Player();
 
-	int LevelUp();
+	void LevelUp();
 	void GainExp(int amount);
 	void Heal(int value);
 	void IncreaseAttack(int value);
@@ -24,4 +24,3 @@ public:
 	void ShowStatus() const;
 
 };
-
