@@ -6,9 +6,10 @@
 #include <windows.h>
 #include <cctype>
 
+
 Game::Game()
 {
-	CurrentPlace = "팀 스파르타 건물 입구";
+	CurrentPlace = "라쿤 시티의 한 건물 앞";
 	CurrentFloor = 0; // 층 정보 초기화
     bchaincutter = false;
 	firstfloorclear = false;
@@ -16,8 +17,10 @@ Game::Game()
 
 void Game::ShowStatus()
 {
+    Logger::Line();
     std::cout << "현재 위치 : " << CurrentPlace << "\n";
-    std::cout << "[W] ↑  [S] ↓  [A] ←  [D] →  [E] 방 조사  [H] 도움말\n\n";
+    std::cout << "[W] ↑  [S] ↓  [A] ←  [D] →  [E] 방 조사  [H] 도움말\n";
+    Logger::Line();
 }
 
 void Game::Run()
@@ -28,9 +31,14 @@ void Game::Run()
     {
        system("cls");
         ShowStatus();
-        Logger::Log("좀비를 피해 도망쳤따");
-        Logger::Log("이제 체력이 후달린다 눈 앞에는 건물이 있다");
-        Logger::Log("들어가야겠따");
+        Logger::Log("나는 좀비를 피해 도망치기 시작했다.");
+        Logger::Space();
+        Logger::Log("숨이 차오르는 와중에 시야에 한 건물이 들어왔다.");
+        Logger::Space();
+        Logger::Log("'들어가야한다.'");
+        Logger::Space();
+        Logger::Log("내 본능이 그렇게 말하고 있었다.");
+        Logger::Space();
         Logger::Log("[W] 건물에 들어간다.\n");
 
         char Input = _getch();
@@ -43,9 +51,9 @@ void Game::Run()
         case 'w':
             CurrentFloor = 1;
             break;
-
+    
         default:
-            std::cout << "사방이 좀비라 다른 행동은 할 수 없다...(아무 키나 누르세요)\n";
+            Logger::Log("사방에는 좀비 떼가 들끓고 있다. 여기서 건물 안으로 들어가는 것 외에는 다른 선택지가 없다...(아무 키나 누르세요)\n");
             _getch();
             break;
         }
@@ -68,12 +76,25 @@ void Game::FirstFloor()
 // 1층1층1층1층1층1층1층1층1층1층1층1층
     
     
-Logger::Log("금방이라도 풀릴듯한 다리를 간신히 부여잡고 건물 안으로 들어갔다.\n");
-Logger::Log("호다닥 들어가서 주변에 보이는 물건들로 문을 막았따.\n");
-Logger::Log("긴 복도 천장에 일렬로 늘어져 있는 전등은 금방이라도 꺼질 듯 깜빡거렸다.\n");
-Logger::Log("기분 탓인지는 모르겠지만 나 말고 다른 사람도 이 건물에 있는 것 같은 느낌이 들었다. 정말 '사람'인지는 모르겠지만...\n");
-Logger::Log("끔찍한 생각을 떨쳐내고 주변을 둘러보았다.\n");
-Logger::Log("벽에 붙어있던 건물 지도를 챙겼다.\n");
+Logger::Log("건물 안으로 겨우 들어왔다. 다리가 후들거리고 있었다.");
+Logger::Space();
+Logger::Log("\"씨발!\"");
+Logger::Space();
+Logger::Log("약간 긴장이 풀리자 이 어처구니 없는 상황에 욕짓거리가 튀어나왔다.");
+Logger::Space();
+Logger::Log("하지만, 이렇게 손놓고 있을 시간은 없다. 나는 주위를 둘러보았다.");
+Logger::Space();
+Logger::Log("긴 복도 천장에 일렬로 늘어져 있는 전등은 금방이라도 꺼질 듯 깜빡거렸다.");
+Logger::Space();
+Logger::Log("기분 탓인지는 모르겠지만 나 말고 다른 사람도 이 건물에 있는 것 같은 느낌이 들었다. 정말 '사람'인지는 모르겠지만...");
+Logger::Space();
+Logger::Log("끔찍한 생각을 떨쳐내고 주변을 둘러본다.");
+Logger::Space();
+Logger::Log("무언가가 눈에 들어왔다.");
+Logger::Space();
+Logger::Log("'지도...?'");
+Logger::Space();
+Logger::Log("나는 벽에 붙어있던 건물 지도를 챙겼다.");
 
 _getch();
        
