@@ -13,7 +13,7 @@ void Inventory::AddItem(const Item& item)
     }
 
     items.push_back(item);
-    
+
     if (item.GetType() == ItemType::HP_POTION)
     {
         typeName = "Çãºê";

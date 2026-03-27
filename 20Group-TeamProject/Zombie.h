@@ -4,8 +4,8 @@
 class Zombie : public Character
 {
 public:
-    Zombie(std::string name, int hp, int attack)
-        : Character(name, hp, attack)
+    Zombie(std::string name, int hp, int maxHP, int attack)
+        : Character(name, hp, maxHP, attack)
     {
     }
 };
@@ -14,7 +14,7 @@ class NormalZombie : public Zombie
 {
 public:
     NormalZombie()
-        : Zombie("좀비", 50, 50)
+        : Zombie("좀비", 50, 50, 50)
     {
     }
 };
@@ -23,7 +23,7 @@ class ArmoredZombie : public Zombie
 {
 public:
     ArmoredZombie()
-        : Zombie("갑옷 좀비", 100, 30)
+        : Zombie("갑옷 좀비", 100, 100, 30)
     {
     }
 };
@@ -32,7 +32,7 @@ class FastZombie : public Zombie
 {
 public:
     FastZombie()
-        : Zombie("재빠른 좀비", 35, 50)
+        : Zombie("재빠른 좀비", 35, 35, 50)
     {
     }
 };

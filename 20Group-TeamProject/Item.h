@@ -1,4 +1,4 @@
-// Item.h
+ï»¿// Item.h
 #pragma once
 #include <string>
 #include "Player.h"
@@ -13,7 +13,7 @@ class Item
 {
 private:
 	std::string name;
-	int value; // È¸º¹·® or °ø°İ·Â Áõ°¡ µî
+	int value; // ÃˆÂ¸ÂºÂ¹Â·Â® or Â°Ã¸Â°ÃÂ·Ã‚ ÃÃµÂ°Â¡ ÂµÃ®
 	ItemType type;
 
 public:

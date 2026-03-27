@@ -1,13 +1,10 @@
 #include "Player.h"
+#include "Logger.h"
 #include <iostream>
 #include <string>
 
 Player::Player()
-{
-
-}
-
-Player::Player(std::string Innick_name) : nick_name(Innick_name), maxLevel(10), level(1), maxHp(200), hp(200), damage(30), exp(0)
+	: Character("Player", 200, 200, 30), level(1), maxLevel(10), exp(0), expToNextLevel(100), gold(0)
 {
 
 }
@@ -15,71 +12,48 @@ Player::~Player()
 {
 
 }
-void Player::SetNickName(std::string Innick_name)
+
+void Player::ShowStatus() const
 {
-	nick_name = Innick_name;
+	std::cout << "==================== Status ====================" << std::endl;
+	std::cout << "Player : " << name << std::endl;
+	std::cout << "Level : " << level << std::endl;
+	std::cout << "HP : " << hp << " / " << maxHp << std::endl;
+	std::cout << "공격력 : " << attack << std::endl;
+	std::cout << "경험치 : " << exp << " / " << expToNextLevel << std::endl;
+	std::cout << "Gold : " << gold << std::endl;
+	std::cout << "================================================" << std::endl;
 }
-void Player::SetLevel(int Inlevel)
+
+int Player::LevelUp()
 {
-	level = Inlevel;
-}
-void Player::SetMaxHp(int InmaxHp)
-{
-	maxHp = InmaxHp;
-}
-void Player::SetHp(int Inhp)
-{
-	hp = Inhp;
-}
-void Player::SetDamage(int Indamage)
-{
-	damage = Indamage;
-}
-void Player::SetExp(int Inexp)
-{
-	exp = Inexp;
-}
-void Player::LevelUp()
-{
-	if (level >= 10)
+	if (exp >= 100)
 	{
-		cout << nick_name << "님은 이미 최대 레벨입니다." << endl;
-		return;
+		if (level == maxLevel)
+		{
+			exp = 0;
+			std::cout << "최대 레벨에 도달했습니다." << std::endl;
+		}
+		else
+		{
+			exp -= 100;
+			level += 1;
+		}
 	}
-
-	level++;
-
-	maxHp += level * 20;
-	attack += level * 5;
-	hp = maxHp;
-
-	std::cout << "레벨 업! " << nick_name << "님이 레벨 " << level << "을 달성하셨습니다." << std::endl;
-	std::cout << "레벨 업 보상으로 최대 체력과 공격력이 증가하고, 체력이 회복되었습니다." << std::endl;
+	return level;
 }
 
-void Heal(int value)
-{
-	if ((hp += value) >= maxHp)
-	{
-		hp = maxHp;
-		std::cout << "체력이 가득 찼습니다" << std::endl;
-	}
-	else
-	{
-		hp += value;
-	}
-}
 
 void Player::GainExp(int amount)
 {
 	if (level >= 10)
 	{
-		std::cout << nick_name << "님은 이미 최대 레벨입니다. 경험치를 추가로 획득하지 않습니다." << std::endl;
+		std::cout << name << "님은 이미 최대 레벨입니다. 경험치를 추가로 획득하지 않습니다." << std::endl;
 		return;
 	}
 
 	exp += amount;
-	std::cout << nick_name << "님이 경험치를 획득하였습니다." << std::endl;
+	std::cout << name << "님이 경험치를 획득하였습니다." << std::endl;
 
 	while (level < 10 && exp >= expToNextLevel)
 	{
@@ -93,40 +67,24 @@ void Player::GainExp(int amount)
 	}
 }
 
-void IncreaseAttack(int value)
+void Player::Heal(int value)
 {
-	damage += value;
-}
-std::string Player::GetNickName()
-{
-	return nick_name;
-}
-int Player::GetLevel()
-{
-	return level;
-}
-int Player::GetMaxHp()
-{
-	return maxHp;
-}
-int Player::GetHp()
-{
-	return hp;
-}
-int Player::GetDamage()
-{
-	return damage;
-}
-int Player::GetExp()
-{
-	return exp;
+	hp += value;
+
+	if (hp> maxHp)
+	{
+		hp = maxHp;
+
+	}
 }
 
-void Player::PlayerStatus() const
+
+void Player::IncreaseAttack(int value)
 {
-	std::cout << "닉네임 :" << nick_name << std::endl;
-	std::cout << "최대 체력 :" << maxHp << std::endl;
-	std::cout << "현재 체력 :" << hp << std::endl;
-	std::cout << "공격력 :" << damage << std::endl;
-	std::cout << "경험치 :" << exp << std::endl;
+	attack += value;
+}
+
+void Player::AddGold(int amount)
+{
+	gold += amount;
 }
