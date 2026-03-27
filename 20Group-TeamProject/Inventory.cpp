@@ -85,6 +85,11 @@ void Inventory::UseItem(int index, Player& target)
     items.erase(items.begin() + index);
 }
 
+int Inventory::GetSize() const
+{
+    return items.size();
+}
+
 bool Inventory::HasItem(ItemType type) const
 {
     for (const auto& item : items)

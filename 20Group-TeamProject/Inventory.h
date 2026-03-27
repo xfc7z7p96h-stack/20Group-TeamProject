@@ -25,4 +25,6 @@ public:
 	
 	int GetPistolAmmo() const;
 	int GetShotgunAmmo() const;
+
+	int GetSize() const;
 };
