@@ -17,6 +17,16 @@ ItemType Item::GetType() const
     return type;
 }
 
+int Item::GetValue() const
+{
+    return value;
+}
+
+void Item::SetValue(int newValue)
+{
+    value = newValue;
+}
+
 void Item::Use(Player& player)
 {
     if (type == ItemType::HP_POTION)

@@ -16,4 +16,13 @@ public:
 	void UseItem(int index, Player& target);
 	void ShowInventory() const;
 	void AddGold(int value);
+
+	bool HasItem(ItemType type) const;
+	bool HasPistol() const;
+	bool HasShotgun() const;
+	bool ConsumePistolAmmo();
+	bool ConsumeShotgunAmmo();
+	
+	int GetPistolAmmo() const;
+	int GetShotgunAmmo() const;
 };
