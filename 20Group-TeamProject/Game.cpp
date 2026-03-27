@@ -2,6 +2,7 @@
 #include "Logger.h"
 #include "Intro.h"
 #include "Battle.h"
+#include <iostream>
 #include <conio.h>
 #include <windows.h>
 #include <cctype>
@@ -14,6 +15,11 @@ Game::Game()
     bchaincutter = false;
 	firstfloorclear = false;
     secretRoom = false;
+	secretRoomQuest = false;
+	secretRoomKey = false;
+    corridorCount=0;
+    storageCount=0;
+    corridorEndCount=0;
 }
 
 void Game::ShowHelp()
@@ -39,7 +45,7 @@ void Game::ShowStatus()
 
 void Game::Run()
 {
-    PlayIntro();
+    //PlayIntro();
 
     while (CurrentFloor == 0)
     {
@@ -156,9 +162,21 @@ void Game::FirstFloor_Corridor()
             break;
 
         case 'e':
-            Logger::Log("딱히 눈에 띄는 것은 없다.\n");
-            Logger::Log("(아무 키나 누르세요.)");
-            _getch();
+            if(secretRoomQuest==true)
+            {
+                ++corridorCount;
+                Logger::Log("딱히 눈에 띄는 것은 없다.\n");
+                Logger::Log("(아무 키나 누르세요.)");
+                _getch();
+                
+            }
+			else
+            {
+                Logger::Log("딱히 눈에 띄는 것은 없다.\n");
+                Logger::Log("(아무 키나 누르세요.)");
+                _getch();
+            }
+            
             break;
 
         case 'w':
@@ -229,15 +247,22 @@ void Game::FirstFloor_storage()
             break;
 
         case 'e':
-            if (bchaincutter == false)
+
+            if(secretRoomQuest==true)
+            {
+                ++storageCount;
+                Logger::Log("딱히 눈에 띄는 것은 없다.\n");
+			}
+            else if (bchaincutter == false)
             {
                 Logger::Log("체인 커터를 발견했다. 녹이 좀 슬었지만 어딘가 쓸 곳이 있을 것 같다.\n");
                 bchaincutter = true;
             }
-            else
+			else if (secretRoomQuest == true)
             {
                 Logger::Log("딱히 눈에 띄는 것은 없다.\n");
             }
+          
            
             Logger::Log("(아무 키나 누르세요.)");
             _getch();
@@ -305,9 +330,22 @@ void Game::FirstFloor_CorridorEnd()
             break;
 
         case 'e':
-            Logger::Log("딱히 눈에 띄는 것은 없다.\n");
-            Logger::Log("(아무 키나 누르세요.)");
-            _getch();
+
+            if (secretRoomQuest == true)
+            {
+                ++corridorEndCount;
+
+                Logger::Log("딱히 눈에 띄는 것은 없다.\n");
+                Logger::Log("(아무 키나 누르세요.)");
+                _getch();
+
+            }
+            else
+            {
+                Logger::Log("딱히 눈에 띄는 것은 없다.\n");
+                Logger::Log("(아무 키나 누르세요.)");
+                _getch();
+            }
             break;
 
         case 'w':
@@ -326,12 +364,9 @@ void Game::FirstFloor_CorridorEnd()
             else if (bchaincutter == true)
             {
                 firstfloorclear = true;
-
-                Logger::Log("쇠사슬을 끊어서 철문을 열었다. 2층으로 올라갈 수 있게 되었다.\n");
-                _getch();
                 CurrentFloor = 2;
                 SecondFloor();
-                firstfloorclear = true;
+                
             }
             else 
             {
@@ -342,8 +377,8 @@ void Game::FirstFloor_CorridorEnd()
             break;
 
         case 'a':
-            CurrentPlace = "건물 1층 [ 복도 ]";
-            return;
+            FirstFloor_Corridor();
+            break;
 
         case 'd':
             Logger::Log("벽에 검붉은 얼룩이 곳곳에 묻어있다.\n");
@@ -358,9 +393,20 @@ void Game::FirstFloor_CorridorEnd()
         }
     }
 }
+/////////////////////////////////////////////////////////////////////////////////////////////////////
 
+
+
+//2층
+
+
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////
 void Game::SecondFloor()
 {
+    Logger::Log("쇠사슬을 끊어서 철문을 열었다.");
+    Logger::Space();
     Logger::Log("2층으로 올라오니 케케묵은 냄새가 더 심해졌다.");
     Logger::Space();
     Logger::Log("아라라랄라라라");
@@ -377,10 +423,17 @@ void Game::SecondFloor()
 
 void Game::SecondFloor_Lobby()
 {
+
+    if (corridorCount >= 8 && storageCount >= 4 && corridorEndCount >= 6)
+    {
+        secretRoom = true;
+    }
+
     CurrentPlace = "건물 2층 [ 로비 ]";
 
     while (CurrentFloor == 2)
     {
+
         system("cls");
 
         ShowStatus();
@@ -390,17 +443,17 @@ void Game::SecondFloor_Lobby()
             Logger::Log("            1층           ");
             Logger::Log("             ↑              ");
             Logger::Log("             |             ");
-            Logger::Log("화장실  ←   ▶로비  → 미팅룸    ");
+            Logger::Log(" 화장실  ← ▶로비  →  미팅룸    ");
             Logger::Log("             |              ");
             Logger::Log("             ↓");
             Logger::Log("            3층");
         }
         else
         {
-            Logger::Log("            1층     탕비실    ");
-            Logger::Log("             ↑        ↑      ");
-            Logger::Log("             |        |      ");
-            Logger::Log("화장실  ←   ▶로비  → 미팅룸    ");
+            Logger::Log("            1층      비밀방    ");
+            Logger::Log("             ↑         ↑      ");
+            Logger::Log("             |         |      ");
+            Logger::Log(" 화장실  ← ▶로비  →  미팅룸    ");
             Logger::Log("             |              ");
             Logger::Log("             ↓");
             Logger::Log("            3층");
@@ -418,8 +471,8 @@ void Game::SecondFloor_Lobby()
             break;
 
         case 'e':
-            Logger::Log("넓은 로비의 중앙에는 큰 원기둥이 천장을 받히고 있었다.\n");
-            Logger::Log("그리고 그 곳에는 피로 그린 듯한 숫자(8)가 있었다..\n");
+            Logger::Log("넓은 로비의 중앙에 큰 원기둥이 천장을 받히고 있다.\n");
+            Logger::Log("'무한대를 일으켜'라는 문장과 함께 [ ∞ ] 모양의 기호가 그려져 있다.\n");
             Logger::Log("(아무 키나 누르세요.)");
             _getch();
             break;
@@ -427,27 +480,263 @@ void Game::SecondFloor_Lobby()
         case 'w':
             CurrentFloor = 1;
             FirstFloor_CorridorEnd();
+            return;
+
+        case 's':
+            if (secretRoomKey == false)
+            {
+                Logger::Log("문이 있지만 당연하게도 잠겨있다..열쇠가 필요하다.\n");
+                Logger::Log("(아무 키나 누르세요)");
+                _getch();
+            }
+            else
+            {
+                Logger::Log("열쇠로 문을 열었다.\n");
+                Logger::Log("3층 가보자이\n");
+                _getch();
+            }
+            break;
+
+        case 'a':
+            SecondFloor_Restroom();
+            break;
+
+        case 'd':
+            SecondFloor_Meetingroom();
+            break;
+
+        default:
+            std::cout << "딴 짓하고 있을 때가 아니다.(아무 키나 누르세요)\n";
+            _getch();
+            break;
+        }
+    }
+}
+
+void Game::SecondFloor_Restroom()
+{
+    CurrentPlace = "건물 2층 [ 화장실 ]";
+
+    while (CurrentFloor == 2)
+    {
+        system("cls");
+
+        ShowStatus();
+
+        if (secretRoom == false)
+        {
+            Logger::Log("            1층           ");
+            Logger::Log("             ↑              ");
+            Logger::Log("             |             ");
+            Logger::Log("▶화장실  →  로비  →  미팅룸    ");
+            Logger::Log("             |              ");
+            Logger::Log("             ↓");
+            Logger::Log("            3층");
+        }
+        else
+        {
+            Logger::Log("            1층      비밀방    ");
+            Logger::Log("             ↑         ↑      ");
+            Logger::Log("             |         |      ");
+            Logger::Log("▶화장실  →  로비  →  미팅룸    ");
+            Logger::Log("             |              ");
+            Logger::Log("             ↓");
+            Logger::Log("            3층");
+        }
+
+        char Input = _getch();
+        Input = std::tolower(Input);
+
+        system("cls");
+
+        switch (Input)
+        {
+        case 'h':
+            ShowHelp();
+            break;
+
+        case 'e':
+            Logger::Log("개똥을 발견했다.\n");
+            Logger::Log("먹을 수 있을 것 같다.\n");
+            Logger::Log("(아무 키나 누르세요.)");
+            _getch();
+            break;
+
+        case 'w':
+            Logger::Log("먼지 쌓인 세면대와 거칠게 금이 간 거울이 보인다.\n");
+            Logger::Log("깨진 거울 조각에 'int* Ptrtox;' 가 써져있다. \n");
+            Logger::Log("세면대 한 쪽 구석에 '64'가 쓰여있다.\n");
+            Logger::Log("(아무 키나 누르세요)");
             _getch();
             break;
 
         case 's':
-            Logger::Log("당연하게도 잠겨있다..열쇠가 필요하다.\n");
+            Logger::Log("좌변기와 칸막이가 보인다. 문짝은 너덜너덜해진 채로 바닥에 넣부러져있다.\n");
+            Logger::Log("칸막이 안으로 들어가 살펴본다.\n");
+            Logger::Log("왼쪽 칸막이에 'int* arr[4];' 가 쓰여있다.\n");
+            Logger::Log("맞은편 칸막이에 '64' 가 쓰여있다.\n");
             Logger::Log("(아무 키나 누르세요)");
             _getch();
             break;
 
         case 'a':
-            CurrentPlace = "건물 1층 [ 복도 ]";
+            Logger::Log("벽에 '[S] / [W] = byte?' 라는 알 수 없는 문자가 써있다.\n");
+            Logger::Log("(아무 키나 누르세요)");
+            _getch();
+            break;
+
+        case 'd':
+            CurrentPlace = "건물 2층 [ 로비 ]";
+            return;
+
+        default:
+            std::cout << "딴 짓하고 있을 때가 아니다.(아무 키나 누르세요)\n";
+            _getch();
+            break;
+        }
+    }
+}
+
+void Game::SecondFloor_Meetingroom()
+{
+    CurrentPlace = "건물 2층 [ 미팅룸 ]";
+
+    while (CurrentFloor == 2)
+    {
+        system("cls");
+
+        ShowStatus();
+
+        if (secretRoom == false)
+        {
+            Logger::Log("            1층           ");
+            Logger::Log("             ↑              ");
+            Logger::Log("             |             ");
+            Logger::Log(" 화장실  ←  로비  ← ▶미팅룸    ");
+            Logger::Log("             |              ");
+            Logger::Log("             ↓");
+            Logger::Log("            3층");
+        } 
+        else
+        {
+            Logger::Log("            1층      비밀방    ");
+            Logger::Log("             ↑         ↑      ");
+            Logger::Log("             |         |      ");
+            Logger::Log(" 화장실  ←  로비  ← ▶미팅룸    ");
+            Logger::Log("             |              ");
+            Logger::Log("             ↓");
+            Logger::Log("            3층");
+        }
+
+        char Input = _getch();
+        Input = std::tolower(Input);
+
+        system("cls");
+
+        switch (Input)
+        {
+        case 'h':
+            ShowHelp();
+            break;
+
+        case 'e':
+                Logger::Log("이상하리만치 고요한 방이다.\n");
+                Logger::Log("이 방 어딘가에서 이상한 소리가 들리는 것 같다.\n");
+                Logger::Log("(아무 키나 누르세요.)");
+                _getch();
+            break;
+
+        case 'w':
+            if (secretRoom == false)
+            {
+                secretRoomQuest = true;
+                Logger::Log("벽에 몸을 바짝 붙이고 귀를 대본다.\n");
+                Logger::Log("벽 너머에서 이상한 소리가 들리는 것 같다.\n");
+                Logger::Space();
+                Logger::Log("벽에 붙어있는 종이에 뭔가가 쓰여있다.\n");
+                Logger::Log("'화장실만큼 창고를 살피고, 로비만큼 복도를 살피고, 미팅룸만큼 복도 끝을 살펴라'\n");
+                Logger::Log("(아무 키나 누르세요)");
+                _getch();
+            }
+            else
+            {
+                SecondFloor_Secretroom();
+            }
+           
+            break;
+
+        case 's':
+            Logger::Log("딱히 눈에 띄는 건 없다.\n");
+            Logger::Log("(아무 키나 누르세요)");
+            _getch();
+            break;
+
+        case 'a':
+            CurrentPlace = "건물 2층 [ 로비 ]";
             return;
 
         case 'd':
-            Logger::Log("벽에 검붉은 얼룩이 곳곳에 묻어있다.\n");
+            Logger::Log("달력을 보니 토요일에 빨간 동그라미가 쳐져있다.\n");
             Logger::Log("(아무 키나 누르세요)");
             _getch();
             break;
 
         default:
             std::cout << "딴 짓하고 있을 때가 아니다.(아무 키나 누르세요)\n";
+            _getch();
+            break;
+        }
+    }
+}
+
+void Game::SecondFloor_Secretroom()
+{
+    CurrentPlace = "건물 2층 [ 비밀방 ]";
+
+    while (CurrentFloor == 2)
+    {
+        system("cls");
+
+        ShowStatus();
+
+            Logger::Log("            1층     ▶비밀방    ");
+            Logger::Log("             ↑         ↑      ");
+            Logger::Log("             |         |      ");
+            Logger::Log(" 화장실  ←  로비  ←  미팅룸    ");
+            Logger::Log("             |              ");
+            Logger::Log("             ↓");
+            Logger::Log("            3층");
+
+        char Input = _getch();
+        Input = std::tolower(Input);
+
+        system("cls");
+
+        switch (Input)
+        {
+        case 'h':
+            ShowHelp();
+            break;
+
+        case 'e':
+            if (secretRoomKey == false)
+            {
+                secretRoomKey = true;
+                Logger::Log("책상 서랍에서 열쇠를 얻었다.\n");
+            }
+            else
+            {
+                Logger::Log("딱히 눈에 띄는 건 없다.\n");
+			}
+            _getch();
+            break;
+
+        case 's':
+            CurrentPlace = "건물 2층 [ 미팅룸 ]";
+            return;
+
+        default:
+            std::cout << "딴 짓하고 있을 때가 아니다. 열쇠를 찾아야 한다.(아무 키나 누르세요)\n";
             _getch();
             break;
         }
