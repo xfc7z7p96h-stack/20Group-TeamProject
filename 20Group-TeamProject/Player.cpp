@@ -17,7 +17,6 @@ void Player::ShowStatus() const
 {
 	std::cout << "==================== Status ====================" << std::endl;
 	std::cout << "Player : " << name << std::endl;
-	std::cout << "장착 중인 무기 : " << weapon << std::endl;
 	std::cout << "Level : " << level << std::endl;
 	std::cout << "HP : " << hp << " / " << maxHp << std::endl;
 	std::cout << "공격력 : " << attack << std::endl;
@@ -94,54 +93,4 @@ void Player::IncreaseAttack(int value)
 void Player::AddGold(int amount)
 {
 	gold += amount;
-}
-
-void Player::rest()
-{
-	hp = maxHp;
-}
-std::string Player::ChangeName(Character& name)
-{
-	std::cout << "이름을 입력해주세요" << std::endl;
-	std::cin >> name;
-	return name;
-}
-void Player::WeaponType()
-{
-	weapon = "보급형 서바이벌 나이프";
-	if (pistol.HasPistol() == true)
-	{
-		std::cout << "권총을 장착했습니다." << std::endl;
-		pistolIsArmed = true;
-		shotgunIsArmed = false;
-		weapon = "권총";
-		return;
-	}
-	if (pistol.HasPistol() == false)
-	{
-		std::cout << "권총을 소유하고 있지 않습니다." << std::endl;
-		pistolIsArmed = false;
-		return;
-	}
-	if (shotgun.HasShotgun() == true)
-	{
-		std::cout << "샷건을 장착했습니다." << std::endl;
-		shotgunIsArmed = true;
-		pistolIsArmed = false;
-		weapon = "샷건";
-		return;
-	}
-	if (shotgun.HasShotgun() == false)
-	{
-		std::cout << "샷건을 소유하고 있지 않습니다." << std::endl;
-		shotgunIsArmed = false;
-		return;
-	}
-	if (pistol.HasPistol() == false && shotgun.HasShotgun() == false)
-	{
-		pistolIsArmed = false;
-		shotgunIsArmed = false;
-		weapon = "보급형 서바이벌 나이프";
-		return;
-	}
 }
