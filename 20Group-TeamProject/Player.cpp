@@ -17,7 +17,7 @@ void Player::ShowStatus() const
 {
 	std::cout << "==================== Status ====================" << std::endl;
 	std::cout << "Player : " << name << std::endl;
-	std::cout << "장착 중인 무기 : " << weapon << std::endl;
+	std::cout << "무기 : " << weapon << std::endl;
 	std::cout << "Level : " << level << std::endl;
 	std::cout << "HP : " << hp << " / " << maxHp << std::endl;
 	std::cout << "공격력 : " << attack << std::endl;
@@ -96,52 +96,69 @@ void Player::AddGold(int amount)
 	gold += amount;
 }
 
-void Player::rest()
+void Player::ResetNickName()
 {
-	hp = maxHp;
+	std::string rename;
+	std::cout << "이름을 다시 설정해 주세요" << std::endl;
+	std::cin >> rename;
+	name.assign(rename);
 }
-std::string Player::ChangeName(Character& name)
+void Player::GetRest()
 {
-	std::cout << "이름을 입력해주세요" << std::endl;
-	std::cin >> name;
-	return name;
+	std::cout << "휴식을 취했습니다" << std::endl;
+	hp = maxHp;
+	std::cout << "[현재 체력 :" << hp << "/ 최대 체력 :" << maxHp << "]" << std::endl;
 }
 void Player::WeaponType()
 {
+	//인벤토리에서 무기를 소유중인지 받아오고 소유중이 아니면 소유중이 아님을 출력하는 함수를 선언하려고했는데 "Inventory.h" 헤더파일을 가져오면 Inventory 헤더에 있는 Item 헤더에서 Player 헤더를 사용중이라 문제가 발생함
+	//Inventory pistol = HasPistol();
+	//if(pistol == false)
+	//{
+	//	std::cout << "권총을 소유중이지 않습니다." << std::endl;
+	//}
+
 	weapon = "보급형 서바이벌 나이프";
-	if (pistol.HasPistol() == true)
+	//weapon을 enum클래스로 만드는걸 고려해봐야 할 듯
+	//char Input = _getch();
+	//Input = std::tolower(Input);
+	
+	//while()
+	//switch (Input)
+	//{
+	//case '1':
+	if (pistolIsArmed == false)
 	{
 		std::cout << "권총을 장착했습니다." << std::endl;
 		pistolIsArmed = true;
 		shotgunIsArmed = false;
 		weapon = "권총";
-		return;
 	}
-	if (pistol.HasPistol() == false)
+	else
 	{
-		std::cout << "권총을 소유하고 있지 않습니다." << std::endl;
-		pistolIsArmed = false;
-		return;
+		std::cout << "이미 장착중입니다." << std::endl;
+	//_getch();
+	//break;
 	}
-	if (shotgun.HasShotgun() == true)
+	//case '2':
+	if (shotgunIsArmed == false)
 	{
 		std::cout << "샷건을 장착했습니다." << std::endl;
 		shotgunIsArmed = true;
 		pistolIsArmed = false;
 		weapon = "샷건";
-		return;
 	}
-	if (shotgun.HasShotgun() == false)
+	else
 	{
-		std::cout << "샷건을 소유하고 있지 않습니다." << std::endl;
-		shotgunIsArmed = false;
-		return;
+		std::cout << "이미 장착중입니다." << std::endl;
 	}
-	if (pistol.HasPistol() == false && shotgun.HasShotgun() == false)
+	//case '3':
+	if (weapon == "보급형 서바이벌 나이프")
 	{
-		pistolIsArmed = false;
-		shotgunIsArmed = false;
-		weapon = "보급형 서바이벌 나이프";
-		return;
+		std::cout << "이미 장착중입니다." << std::endl;
+	}
+	else
+	{
+		std::cout << "보급형 서바이벌 나이프 장착했습니다." << std::endl;
 	}
 }
