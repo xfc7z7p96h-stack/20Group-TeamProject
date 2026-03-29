@@ -161,7 +161,7 @@ bool Inventory::ConsumeShotgunAmmo()
     return false;
 }
 
-void Inventory::ShowInventory() const
+void Inventory::ShowInventory() const  // (구버전)해당 함수 삭제 예정, 현재 Battle.cpp에서 사용 중이라 못 지웠음
 {
     std::cout << "\n===== 인벤토리 =====\n";
 
@@ -181,7 +181,7 @@ void Inventory::ShowInventory() const
     std::cout << "\n골드 : " << gold << "\n";
 }
 
-void Inventory::ShowInventory(int selectedIndex) const
+void Inventory::ShowInventory(int selectedIndex) const  // 최신 버전, 해당 함수 사용 요망
 {
     std::cout << "\n===== 인벤토리 =====\n";
     std::cout << "[W/S] 이동  [E] 선택  [Q] 닫기\n\n";
