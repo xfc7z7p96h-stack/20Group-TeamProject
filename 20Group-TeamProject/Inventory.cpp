@@ -1,22 +1,33 @@
 // Inventory.cpp
 #include "Inventory.h"
+#include "Player.h"
 #include <iostream>
+//#include <limits>
+#include <conio.h>
+#include <cctype>
+#include <cstdlib>
 
 Inventory::Inventory()
 {
     items.push_back(Item("칼", 0, ItemType::KNIFE));
 }
 
-void Inventory::AddItem(const Item& item)
+int Inventory::GetGold() const
 {
-    if (items.size() >= maxSize)
+    return gold;
+}
+
+bool Inventory::AddItem(const Item& item)
+{
+    if (static_cast<int>(items.size()) >= maxSize)
     {
         std::cout << "인벤토리에 자리가 없다.\n";
-        return;
+        return false;
     }
 
     items.push_back(item);
     std::cout << item.GetName() << " 획득!\n";
+    return true;
 }
 
 void Inventory::AddGold(int value)
@@ -25,53 +36,27 @@ void Inventory::AddGold(int value)
     std::cout << value << " 골드를 획득했다!\n";
 }
 
-void Inventory::UseItem(int index, Player& target)
+bool Inventory::UseItem(int index, Player& target)
 {
-    if (index < 0 || index >= items.size())
+    if (index < 0 || index >= static_cast<int>(items.size()))
     {
         std::cout << "잘못 선택했다.\n";
-        return;
+        return false;
     }
-    
-    ItemType type = items[index].GetType();
 
-    if (type == ItemType::KNIFE)
+    bool used = items[index].Use(target);
+
+    if (used && items[index].IsConsumable())
     {
-        std::cout << "경찰 임용 선물로 받은 보급형 서바이벌 나이프.\n";
-        return;
+        items.erase(items.begin() + index);
     }
 
-    if (type == ItemType::PISTOL)
-    {
-        std::cout << "권총은 전투 중 사용할 수 있다.\n";
-        return;
-    }
-
-    if (type == ItemType::SHOTGUN)
-    {
-        std::cout << "샷건은 전투 중 사용할 수 있다.\n";
-        return;
-    }
-
-    if (type == ItemType::PISTOL_AMMO)
-    {
-        std::cout << "현재 권총 탄알집 잔탄: " << items[index].GetValue() << "발\n";
-        return;
-    }
-
-    if (type == ItemType::SHOTGUN_AMMO)
-    {
-        std::cout << "현재 샷건 탄알집 잔탄: " << items[index].GetValue() << "발\n";
-        return;
-    }
-
-    items[index].Use(target);
-    items.erase(items.begin() + index);
+    return used;
 }
 
 int Inventory::GetSize() const
 {
-    return items.size();
+    return static_cast<int>(items.size());
 }
 
 bool Inventory::HasItem(ItemType type) const
@@ -122,7 +107,7 @@ int Inventory::GetShotgunAmmo() const
 
 bool Inventory::ConsumePistolAmmo()
 {
-    for (int i = 0; i < items.size(); i++)
+    for (int i = 0; i < static_cast<int>(items.size()); i++)
     {
         if (items[i].GetType() == ItemType::PISTOL_AMMO)
         {
@@ -150,7 +135,7 @@ bool Inventory::ConsumePistolAmmo()
 
 bool Inventory::ConsumeShotgunAmmo()
 {
-    for (int i = 0; i < items.size(); i++)
+    for (int i = 0; i < static_cast<int>(items.size()); i++)
     {
         if (items[i].GetType() == ItemType::SHOTGUN_AMMO)
         {
@@ -180,18 +165,148 @@ void Inventory::ShowInventory() const
 {
     std::cout << "\n===== 인벤토리 =====\n";
 
-    if (items.empty())
+    for (int i = 0; i < static_cast<int>(items.size()); ++i)
     {
-        std::cout << "아이템이 없다.\n";
-    }
-    else
-    {
-        for (int i = 0; i < items.size(); i++)
+        std::cout << i + 1 << ". " << items[i].GetName();
+
+        ItemType type = items[i].GetType();
+        if (type == ItemType::PISTOL_AMMO || type == ItemType::SHOTGUN_AMMO)
         {
-            std::cout << i + 1 << ". " << items[i].GetName() << "\n";
+            std::cout << " x" << items[i].GetValue();
         }
+
+        std::cout << "\n";
     }
 
     std::cout << "\n골드 : " << gold << "\n";
-    std::cout << "0. 나가기\n";
 }
+
+void Inventory::ShowInventory(int selectedIndex) const
+{
+    std::cout << "\n===== 인벤토리 =====\n";
+    std::cout << "[W/S] 이동  [E] 선택  [Q] 닫기\n\n";
+
+    for (int i = 0; i < static_cast<int>(items.size()); ++i)
+    {
+        if (i == selectedIndex)
+        {
+            std::cout << "> ";
+        }
+        else
+        {
+            std::cout << "  ";
+        }
+
+        std::cout << items[i].GetName();
+
+        ItemType type = items[i].GetType();
+        if (type == ItemType::PISTOL_AMMO || type == ItemType::SHOTGUN_AMMO)
+        {
+            std::cout << " x" << items[i].GetValue();
+        }
+
+        std::cout << "\n";
+    }
+
+    std::cout << "\n골드 : " << gold << "\n";
+}
+
+bool Inventory::OpenInventory(Player& target)
+{
+    int selectedIndex = 0;
+
+    while (true)
+    {
+        system("cls");
+        ShowInventory(selectedIndex);
+
+        char input = _getch();
+        input = std::tolower(static_cast<unsigned char>(input));
+
+        switch (input)
+        {
+        case 'w':
+            if (selectedIndex > 0)
+            {
+                --selectedIndex;
+            }
+            break;
+
+        case 's':
+            if (selectedIndex < GetSize() - 1)
+            {
+                ++selectedIndex;
+            }
+            break;
+
+        case 'e':
+        {
+            system("cls");
+            bool used = UseItem(selectedIndex, target);
+
+            std::cout << "\n(아무 키나 누르세요.)";
+            _getch();
+
+            if (selectedIndex >= GetSize())
+            {
+                selectedIndex = GetSize() - 1;
+            }
+
+            if (selectedIndex < 0)
+            {
+                selectedIndex = 0;
+            }
+
+            if (used)
+            {
+                return true;
+            }
+
+            break;
+        }
+
+        case 'q':
+            return false;
+        }
+    }
+}
+
+//bool Inventory::OpenAndUse(Player& target)
+//{
+//    while (true)
+//    {
+//        ShowInventory();
+//        std::cout << "사용할 아이템 번호를 입력하세요. (0: 나가기)\n";
+//        std::cout << "입력: ";
+//
+//        int choice;
+//        std::cin >> choice;
+//
+//        if (std::cin.fail())
+//        {
+//            std::cin.clear();
+//            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+//            std::cout << "숫자를 입력해주세요.\n";
+//            continue;
+//        }
+//
+//        if (choice == 0)
+//        {
+//            std::cout << "인벤토리를 닫습니다.\n";
+//            return false;
+//        }
+//
+//        if (choice < 1 || choice > static_cast<int>(items.size()))
+//        {
+//            std::cout << "손이 미끄러졌다. 다시 선택하자.\n";
+//            continue;
+//        }
+//
+//        bool used = UseItem(choice - 1, target);
+//
+//        if (used)
+//        {
+//            return true;
+//        }
+//    }
+//}
