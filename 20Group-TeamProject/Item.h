@@ -39,6 +39,9 @@ public:
 	bool IsConsumable() const;		// 사용 후 사라지는 아이템인지
 	bool CanUse() const;			// 인벤토리에서 직접 사용 가능한지
 	bool Use(Player& player);		// 성공하면 true
+
+	bool CanStackByValue() const;
+	bool DecreaseValue(int amount = 1);
 };
 
 //객체 생성 시(아이템 획득)

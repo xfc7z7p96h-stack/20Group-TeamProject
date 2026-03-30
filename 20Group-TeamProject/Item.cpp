@@ -41,6 +41,36 @@ bool Item::IsConsumable() const
     }
 }
 
+bool Item::DecreaseValue(int amount)
+{
+    if (value <= 0)
+        return false;
+
+    value -= amount;
+
+    if (value < 0)
+        value = 0;
+
+    return true;
+}
+
+bool Item::CanStackByValue() const
+{
+    switch (type)
+    {
+    case ItemType::HP_POTION:
+    case ItemType::ATTACK_POTION:
+    case ItemType::PISTOL:
+    case ItemType::SHOTGUN:
+    case ItemType::KNIFE:
+        return false;
+    default:
+        return true;
+
+    }
+
+}
+
 bool Item::CanUse() const
 {
     switch (type)

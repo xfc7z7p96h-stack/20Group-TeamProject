@@ -19,6 +19,19 @@ int Inventory::GetGold() const
 
 bool Inventory::AddItem(const Item& item)
 {
+    if (item.CanStackByValue())
+    {
+        for (auto& it : items)
+        {
+            if (it.GetType() == item.GetType())
+            {
+                it.SetValue(it.GetValue() + item.GetValue());
+                std::cout << item.GetName() << " 획득!\n";
+                return true;
+            }
+        }
+    }
+
     if (static_cast<int>(items.size()) >= maxSize)
     {
         std::cout << "인벤토리에 자리가 없다.\n";
@@ -161,6 +174,21 @@ bool Inventory::ConsumeShotgunAmmo()
     return false;
 }
 
+void Inventory::RemoveEmptyStackableItems()
+{
+    for (int i = 0; i < static_cast<int>(items.size()); )
+    {
+        if (items[i].CanStackByValue() && items[i].GetValue() <= 0)
+        {
+            items.erase(items.begin() + i);
+        }
+        else
+        {
+            ++i;
+        }
+    }
+}
+
 void Inventory::ShowInventory() const // 구버전 함수, Battle.cpp에서 기존 호출 중
 {
     std::cout << "\n===== 인벤토리 =====\n";
@@ -200,7 +228,7 @@ void Inventory::ShowInventory(int selectedIndex) const  // 최신 함수, OpenInvent
         std::cout << items[i].GetName();
 
         ItemType type = items[i].GetType();
-        if (type == ItemType::PISTOL_AMMO || type == ItemType::SHOTGUN_AMMO)
+        if (items[i].CanStackByValue())
         {
             std::cout << " x" << items[i].GetValue();
         }

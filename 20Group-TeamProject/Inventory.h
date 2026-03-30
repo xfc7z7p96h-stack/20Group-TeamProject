@@ -35,4 +35,7 @@ public:
     int GetShotgunAmmo() const;
     int GetGold() const;
     int GetSize() const;
+
+    void RemoveEmptyStackableItems();
+
 };
