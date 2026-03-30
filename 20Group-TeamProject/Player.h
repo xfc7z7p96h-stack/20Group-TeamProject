@@ -29,6 +29,7 @@ public:
 	void ResetNickName();
 	void GetRest();
 	void CurrentWeaponType();
+<<<<<<< HEAD
 	void ShowExpBar() const;
 
 private:
@@ -42,4 +43,6 @@ private:
 	std::string myWeapon;
 	bool pistolIsArmed;
 	bool shotgunIsArmed;
+=======
+>>>>>>> 61570c0e89c25a15c3a41b05a5887927dd308adc
 };

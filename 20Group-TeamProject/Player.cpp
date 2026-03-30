@@ -2,7 +2,6 @@
 #include "Logger.h"
 #include <iostream>
 #include <string>
-#include <windows.h>
 
 Player::Player()
 	: Character("Leon Scott Kennedy", 200, 200, 30), level(1), maxLevel(10), exp(0), expToNextLevel(100), gold(0)
@@ -13,72 +12,21 @@ Player::~Player()
 {
 }
 
-void PrintStatChange(const std::string& name, int oldValue, int newValue)
+void Player::ShowStatus() const
 {
-	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-
-	std::cout << name << " : " << oldValue << " → " << newValue << " (";
-
-	SetConsoleTextAttribute(hConsole, 12);
-	std::cout << "▲ " << newValue - oldValue;
-
-	SetConsoleTextAttribute(hConsole, 7);
-
-	std::cout << ")\n";
-}
-
-void Player::ShowExpBar() const
-{
-
-	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-
-	int barWidth = 20;
-
-	if (expToNextLevel <= 0)
-	{
-		std::cout << "[--------------------] 0/0 (0%)\n";
-		return;
-	}
-
-	int filled = (exp * barWidth) / expToNextLevel;
-
-	if (filled > barWidth)
-	{
-		filled = barWidth;
-	}
-	int percent = (exp * 100) / expToNextLevel;
-
-	if (percent > 100)
-	{
-		percent = 100;
-	}
-
-	std::cout << "[";
-	for (int i = 0; i < barWidth; i++)
-	{
-		if (i < filled)
-		{
-			SetConsoleTextAttribute(hConsole, 10);
-			std::cout << "#";
-		}
-		else
-		{
-			SetConsoleTextAttribute(hConsole, 8);
-			std::cout << "-";
-		}
-	}
-
-	SetConsoleTextAttribute(hConsole, 7);
-
-	std::cout << "] "
-		<< exp << "/" << expToNextLevel
-		<< " (" << percent << "%)\n";
+	std::cout << "==================== Status ====================" << std::endl;
+	std::cout << "Player : " << name << std::endl;
+	std::cout << "무기 : " << myWeapon << std::endl;
+	std::cout << "Level : " << level << std::endl;
+	std::cout << "HP : " << hp << " / " << maxHp << std::endl;
+	std::cout << "공격력 : " << attack << std::endl;
+	std::cout << "경험치 : " << exp << " / " << expToNextLevel << std::endl;
+	std::cout << "Gold : " << gold << std::endl;
+	std::cout << "================================================" << std::endl;
 }
 
 void Player::LevelUp()
 {
-	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-
 	if (level >= maxLevel)
 	{
 		exp = 0;
@@ -89,26 +37,13 @@ void Player::LevelUp()
 	while (level < maxLevel && exp >= expToNextLevel)
 	{
 		exp -= expToNextLevel;
-
-		int oldLevel = level;
-		int oldMaxHp = maxHp;
-		int oldAttack = attack;
-
 		level++;
 
 		maxHp += level * 20;
 		attack += level * 5;
 		hp = maxHp;
 
-
-		SetConsoleTextAttribute(hConsole, 9);
-		std::cout << "Level Up!\n";
-		SetConsoleTextAttribute(hConsole, 7);
-		std::cout << "====== Stat Increase ======\n";
-		PrintStatChange("Level", oldLevel, level);
-		PrintStatChange("HP", oldMaxHp, maxHp);
-		PrintStatChange("Attack", oldAttack, attack);
-		std::cout << "===========================\n";
+		std::cout << "레벨 업! 현재 레벨: " << level << "\n";
 
 		if (level >= maxLevel)
 		{
@@ -117,19 +52,6 @@ void Player::LevelUp()
 			break;
 		}
 	}
-}
-
-void Player::ShowStatus() const
-{
-	std::cout << "==================== Status ====================" << std::endl;
-	std::cout << "Player : " << name << std::endl;
-	std::cout << "무기 : " << myWeapon << std::endl;
-	std::cout << "Level : " << level << std::endl;
-	std::cout << "HP : " << hp << " / " << maxHp << std::endl;
-	std::cout << "공격력 : " << attack << std::endl;
-	std::cout << "경험치 : ";
-	ShowExpBar();
-	std::cout << "================================================" << std::endl;
 }
 
 void Player::GainExp(int amount)
@@ -155,7 +77,7 @@ void Player::Heal(int value)
 {
 	hp += value;
 
-	if (hp > maxHp)
+	if (hp> maxHp)
 	{
 		hp = maxHp;
 
@@ -227,7 +149,7 @@ void Player::CurrentWeaponType()
 	//weapon을 enum클래스로 만드는걸 고려해봐야 할 듯
 	//char Input = _getch();
 	//Input = std::tolower(Input);
-
+	
 	//while()
 	//switch (Input)
 	//{
@@ -241,8 +163,8 @@ void Player::CurrentWeaponType()
 	else
 	{
 		std::cout << "이미 장착중입니다." << std::endl;
-		//_getch();
-		//break;
+	//_getch();
+	//break;
 	}
 	//case '2':
 	if (shotgunIsArmed == false)
