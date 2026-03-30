@@ -57,16 +57,48 @@ bool Inventory::UseItem(int index, Player& target)
         return false;
     }
 
-    bool used = items[index].Use(target);
+    Item& item = items[index];
 
-    if (used && items[index].IsConsumable())
+    // 1. ¼ÒºñÇü ¾ÆÀÌÅÛ
+    if (item.IsConsumable())
     {
-        items.erase(items.begin() + index);
+        bool used = item.Use(target);
+
+        if (used)
+        {
+            items.erase(items.begin() + index);
+        }
+
+        return used;
     }
 
-    return used;
-}
+    // 2. ÀåÂøÇü ¾ÆÀÌÅÛ
+    if (item.IsEquipable())
+    {
+        switch (item.GetType())
+        {
+        case ItemType::KNIFE:
+            target.SetArmedWeapon(Player::knife);
+            std::cout << "Ä®À» ÀåÂøÇß´Ù.\n";
+            return true;
 
+        case ItemType::PISTOL:
+            target.SetArmedWeapon(Player::pistol);
+            std::cout << "±ÇÃÑÀ» ÀåÂøÇß´Ù.\n";
+            return true;
+
+        case ItemType::SHOTGUN:
+            target.SetArmedWeapon(Player::shotgun);
+            std::cout << "¼¦°ÇÀ» ÀåÂøÇß´Ù.\n";
+            return true;
+
+        default:
+            break;
+        }
+    }
+
+    return item.Use(target);
+}
 int Inventory::GetSize() const
 {
     return static_cast<int>(items.size());

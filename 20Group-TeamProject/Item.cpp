@@ -41,6 +41,20 @@ bool Item::IsConsumable() const
     }
 }
 
+bool Item::IsEquipable() const
+{
+    switch (type)
+    {
+    case ItemType::KNIFE:
+    case ItemType::PISTOL:
+    case ItemType::SHOTGUN:
+        return true;
+
+    default:
+        return false;
+    }
+}
+
 bool Item::DecreaseValue(int amount)
 {
     if (value <= 0)
