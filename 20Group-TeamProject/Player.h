@@ -40,6 +40,7 @@ public:
 	void GetRest();
 	void CurrentWeaponType();
 <<<<<<< HEAD
+<<<<<<< HEAD
 	void ShowExpBar() const;
 <<<<<<< HEAD
 
@@ -58,4 +59,6 @@ private:
 >>>>>>> 61570c0e89c25a15c3a41b05a5887927dd308adc
 =======
 >>>>>>> parent of 8b5eba6 (Player 충돌 수정입니다)
+=======
+>>>>>>> parent of 157e15b (enum WeaponType 클래스를 public으로 변경했습니다)
 };
