@@ -5,19 +5,6 @@
 #include <string>
 #include "Random.h"
 
-
-// 수정한 랜덤 함수에 대한 설명입니다.
-
-Battle::Battle() // 생성자가 호출될 때 랜덤 시드값을 초기화하고, 그 값으로 랜덤 생성 엔진을 초기화합니다.
-{ // **주의** Battle 생성자는 프로그램이 시작될 때 한 번만 호출되어야 합니다. 안그러면 랜덤값이 매번 똑같이 나올 수도 있음.
-    std::random_device rd; // 시드값을 랜덤하게 초기화
-    gen = std::mt19937(rd()); // 랜덤 생성 엔진 초기화
-	// 여기서 랜덤 시드값 변수인 rd때문에 gen의 값이 완전히 랜덤하게 초기화됩니다. 만약 rd가 없다면, gen은 항상 같은 시드값으로 초기화되어 매번 같은 랜덤값이 나오게 됩니다.
-}
-
-
-
-
 void Battle::Encounter(Player& player, Inventory& inven)
 {
     if (player.IsDead())
@@ -26,7 +13,7 @@ void Battle::Encounter(Player& player, Inventory& inven)
         return;
     }
 
-    int randomMonster = RandomRange(0, 2); // 0 ~ 2 사이의 랜덤값 생성
+    int randomMonster = Random::Range(0, 2); // 0 ~ 2 사이의 랜덤값 생성
     std::unique_ptr<Zombie> monster;
 
     switch (randomMonster)
@@ -144,7 +131,7 @@ void Battle::Encounter(Player& player, Inventory& inven)
             }
             else if (playerAnswer == "E")
             {
-                int randomRun = RandomRange(0, 1);
+                int randomRun = Random::Range(0, 1);
 
                 if (randomRun == 0)
                 {
@@ -207,16 +194,16 @@ void Battle::Encounter(Player& player, Inventory& inven)
 
 Item Battle::RandomItem()
 {
-	switch (RandomRange(0, 3)) // 0 ~ 1 사이의 랜덤값 생성
+	switch (Random::Range(0, 3)) // 0 ~ 1 사이의 랜덤값 생성
     {
     case 0:
         return Item("HP Potion", 50, ItemType::HP_POTION);
     case 1:
         return Item("Attack Potion", 10, ItemType::ATTACK_POTION);
     case 2:
-        return Item("Shotgun Ammo", RandomRange(1, 3), ItemType::SHOTGUN_AMMO);
+        return Item("Shotgun Ammo", Random::Range(1, 3), ItemType::SHOTGUN_AMMO);
     case 3:
-        return Item("Pistol Ammo", RandomRange(2, 3), ItemType::PISTOL_AMMO);
+        return Item("Pistol Ammo", Random::Range(2, 3), ItemType::PISTOL_AMMO);
     }
 }
 
@@ -239,7 +226,7 @@ Item Battle::RandomItem()
 
 int Battle::RandomGold()
 {
-    return RandomRange(6, 15); // 6 ~ 15 사이의 랜덤값을 반환
+    return Random::Range(6, 15); // 6 ~ 15 사이의 랜덤값을 반환
 }
 
 //int Battle::RandomGold(int r)
