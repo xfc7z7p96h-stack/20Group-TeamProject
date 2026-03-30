@@ -16,7 +16,7 @@ void Player::ShowStatus() const
 {
 	std::cout << "==================== Status ====================" << std::endl;
 	std::cout << "Player : " << name << std::endl;
-	std::cout << "무기 : " << myWeapon << std::endl;
+	std::cout << "무기 : " << weapon << std::endl;
 	std::cout << "Level : " << level << std::endl;
 	std::cout << "HP : " << hp << " / " << maxHp << std::endl;
 	std::cout << "공격력 : " << attack << std::endl;
@@ -108,37 +108,7 @@ void Player::GetRest()
 	hp = maxHp;
 	std::cout << "[현재 체력 :" << hp << "/ 최대 체력 :" << maxHp << "]" << std::endl;
 }
-void Player::SetArmedWeapon(int value)
-{
-	currentWeapon = static_cast<WeaponType>(value);
-}
-
-Player::WeaponType Player::GetArmedWeapon()
-{
-	return currentWeapon;
-}
-
-void Player::WeaponName()
-{
-
-	if (currentWeapon == WeaponType::non)
-	{
-		myWeapon = "맨손";
-	}
-	else if (currentWeapon == WeaponType::pistol)
-	{
-		myWeapon = "권총";
-	}
-	else if (currentWeapon == WeaponType::shotgun)
-	{
-		myWeapon = "샷건";
-	}
-	else
-	{
-		myWeapon = "보급형 서바이벌 나이프";
-	}
-}
-void Player::CurrentWeaponType()
+void Player::WeaponType()
 {
 	//인벤토리에서 무기를 소유중인지 받아오고 소유중이 아니면 소유중이 아님을 출력하는 함수를 선언하려고했는데 "Inventory.h" 헤더파일을 가져오면 Inventory 헤더에 있는 Item 헤더에서 Player 헤더를 사용중이라 문제가 발생함
 	//Inventory pistol = HasPistol();
@@ -146,6 +116,8 @@ void Player::CurrentWeaponType()
 	//{
 	//	std::cout << "권총을 소유중이지 않습니다." << std::endl;
 	//}
+
+	weapon = "보급형 서바이벌 나이프";
 	//weapon을 enum클래스로 만드는걸 고려해봐야 할 듯
 	//char Input = _getch();
 	//Input = std::tolower(Input);
@@ -159,6 +131,7 @@ void Player::CurrentWeaponType()
 		std::cout << "권총을 장착했습니다." << std::endl;
 		pistolIsArmed = true;
 		shotgunIsArmed = false;
+		weapon = "권총";
 	}
 	else
 	{
@@ -172,10 +145,19 @@ void Player::CurrentWeaponType()
 		std::cout << "샷건을 장착했습니다." << std::endl;
 		shotgunIsArmed = true;
 		pistolIsArmed = false;
+		weapon = "샷건";
 	}
 	else
 	{
 		std::cout << "이미 장착중입니다." << std::endl;
 	}
 	//case '3':
+	if (weapon == "보급형 서바이벌 나이프")
+	{
+		std::cout << "이미 장착중입니다." << std::endl;
+	}
+	else
+	{
+		std::cout << "보급형 서바이벌 나이프 장착했습니다." << std::endl;
+	}
 }
