@@ -3,6 +3,7 @@
 #include "Intro.h"
 #include "Battle.h"
 #include "Inventory.h"
+#include "Random.h"
 #include <iostream>
 #include <conio.h>
 #include <windows.h>
@@ -39,6 +40,13 @@ Game::Game()
 
     breadCount = 0;
     waterCount = 0;
+}
+void Game::RandomEncounter()
+{
+    if (Random::Chance(30))
+    {
+        battle.Encounter(player, inven);
+    }
 }
 
 void Game::ControlRoomPuzzle()
@@ -629,6 +637,7 @@ void Game::Run()
             break;
 
         case ROOM_FIRSTFLOOR_CORRIDOR:
+            
             switch (Input)
             {
             case 'i':
@@ -650,6 +659,7 @@ void Game::Run()
                 break;
 
             case 'w':
+                RandomEncounter();
                 CurrentRoom = ROOM_FIRSTFLOOR_STORAGE;
                 break;
 
@@ -666,6 +676,7 @@ void Game::Run()
                 break;
 
             case 'd':
+                RandomEncounter();
                 CurrentRoom = ROOM_FIRSTFLOOR_CORRIDOREND;
                 break;
 
@@ -1444,6 +1455,10 @@ void Game::Ending()
 {
     if (breadCount > 5 || waterCount > 5)
     {
-
+        //outtro bad ending
+    }
+    else
+    {
+        //outro good ending
     }
 }

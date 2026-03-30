@@ -76,6 +76,8 @@ public:
     void ShowStatus();
     void ShowHelp();
 
+    void RandomEncounter();
+
     void ArchivePuzzle();
     void ControlRoomPuzzle();
     void Ending();
