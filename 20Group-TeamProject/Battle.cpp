@@ -56,9 +56,10 @@ void Battle::Encounter(Player& player, Inventory& inven)
             std::cin >> playerAnswer;
             if(playerAnswer == "Q")
             {
-                if (inven.HasPistol()) //플레이어가 총을 창착하고 있는지 없는지 판단으로 바꿔야함
+                Player::WeaponType weapon = player.GetArmedWeapon();
+                if (weapon == Player::WeaponType::pistol) //플레이어가 총을 창착하고 있는지 없는지 판단으로 바꿔야함
                 {
-                    if (inven.GetPistolAmmo() > 0)
+                    if (inven.GetPistolAmmo())
                     {
                         int gunDamage = player.GetAttack() + 10; // 총대미지 기본 설정 벨런스 조절시ㅣ 여기 조정
                         monster->TakeDamage(gunDamage);
@@ -74,7 +75,7 @@ void Battle::Encounter(Player& player, Inventory& inven)
                         manager0 = 1;
                     }
                 }
-                else if (inven.HasShotgun())
+                else if (weapon == Player::WeaponType::shotgun)
                 {
                     if (inven.GetShotgunAmmo() > 0)
                     {
