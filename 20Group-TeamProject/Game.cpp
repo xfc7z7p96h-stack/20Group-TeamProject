@@ -1,6 +1,7 @@
 #include "Game.h"
 #include "Logger.h"
 #include "Intro.h"
+#include "Ending.h"
 #include "Battle.h"
 #include "Inventory.h"
 #include "Random.h"
@@ -1418,7 +1419,7 @@ void Game::Run()
                 }
                 else
                 {
-                   // Ending();
+                   Ending();
                 }
 
                 _getch();
@@ -1453,12 +1454,17 @@ void Game::Run()
 
 void Game::Ending()
 {
+    Logger::Log("엘리베이터의 전원이 들어왔다.\n\n");
+    Logger::Log("이 건물도 이제 지옥이나 다름없다.\n");
+    Logger::Log("나는 옥상 버튼을 눌렀다.\n");
+    _getch();
+
     if (breadCount > 5 || waterCount > 5)
     {
-        //outtro bad ending
+        Ending::StarvationEnding();
     }
     else
     {
-        //outro good ending
+        Ending::RescueEnding();
     }
 }
