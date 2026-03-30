@@ -10,7 +10,7 @@ class Inventory
 {
 private:
     std::vector<Item> items;
-    const int maxSize = 10;
+    const int maxSize = 20;
     int gold = 0;
 
 public:
