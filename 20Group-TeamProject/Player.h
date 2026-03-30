@@ -39,5 +39,4 @@ public:
 	void ResetNickName();
 	void GetRest();
 	void CurrentWeaponType();
-	void ShowExpBar() const;
 };
