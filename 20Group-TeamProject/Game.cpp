@@ -29,6 +29,153 @@ Game::Game()
     ThirdFloorIntro = false;
 
 	archivePuzzle = false;
+	isolationRoomitem = false;
+	isolationRoomitem2 = false;
+	archiveitem = false;
+	sergeryRoomitem = false;
+    sergeryRoomCount = 0;
+    Opened = false;
+    fuse = false;
+}
+
+void Game::ControlRoomPuzzle()
+{
+    if (Opened == true)
+    {
+        Logger::Log("이미 열려 있는 금고다.\n");
+        Logger::Log("\n(아무 키나 누르세요)\n");
+        return;
+    }
+
+    const int dialMin = 0;
+    const int dialMax = 15;
+
+    int cursor = 0;
+    int stage = 1;
+    char input;
+    char lastMove = '\0';
+
+    while (true)
+    {
+        system("cls");
+
+        Logger::Log("감시실 깊숙한 구석에 작은 금고가 하나 놓여있다.\n");
+        Logger::Log("[A] 왼쪽 이동   [D] 오른쪽 이동   [E] 확정   [Q] 나가기\n\n");
+
+        std::cout << "----------------------------------------------------------------" << '\n';
+
+        for (int i = dialMin; i <= dialMax; ++i)
+        {
+            if (i == cursor)
+            {
+                std::cout << " ▼ ";
+            }
+            else
+            {
+                std::cout << "    ";
+            }
+        }
+        std::cout << '\n';
+
+        for (int i = dialMin; i <= dialMax; ++i)
+        {
+            if (i < 10)
+            {
+                std::cout << " 0" << i << " ";
+            }
+            else
+            {
+                std::cout << " " << i << " ";
+            }
+        }
+        std::cout << '\n';
+
+        std::cout << "----------------------------------------------------------------" << '\n';
+
+        input = _getch();
+
+        if (input == 'q' || input == 'Q')
+        {
+            return;
+        }
+        else if (input == 'a' || input == 'A')
+        {
+            if (cursor == dialMin)
+            {
+                cursor = dialMax;
+            }
+            else
+            {
+                --cursor;
+            }
+
+            lastMove = 'A';
+        }
+        else if (input == 'd' || input == 'D')
+        {
+            if (cursor == dialMax)
+            {
+                cursor = dialMin;
+            }
+            else
+            {
+                ++cursor;
+            }
+
+            lastMove = 'D';
+        }
+        else if (input == 'e' || input == 'E')
+        {
+            if (stage == 1)
+            {
+                if (cursor == 7 && lastMove == 'A')
+                {
+                    lastMove = '\0';
+                    stage = 2;
+                }
+                else
+                {
+                    Logger::Log("\n틀린 것 같다...\n");
+                    Logger::Log("\n(아무 키나 누르세요)\n");
+                    return;
+                }
+            }
+            else if (stage == 2)
+            {
+                if (cursor == 12 && lastMove == 'D')
+                {
+                    lastMove = '\0';
+                    stage = 3;
+                }
+                else
+                {
+                    Logger::Log("\n틀린 것 같다...\n");
+                    Logger::Log("\n(아무 키나 누르세요)\n");
+                    return;
+                }
+            }
+            else if (stage == 3)
+            {
+                if (cursor == 3 && lastMove == 'A')
+                {
+                    Opened = true;
+                    fuse = true;
+
+                    Logger::Log("\n'철컥'\n");
+                    Logger::Log("금고 안쪽에서 잠금장치가 풀리는 소리가 울린다.\n");
+                    Logger::Log("[ 퓨즈 ] 획득\n");
+                    Logger::Log("\n(아무 키나 누르세요)\n");
+                    return;
+                }
+                else
+                {
+                    Logger::Log("\n틀린 것 같다...\n");
+                    _getch();
+                    return;
+                }
+            }
+        }
+    }
 }
 
 void Game::ArchivePuzzle()
@@ -338,7 +485,7 @@ void Game::Run()
             Logger::Log("                 2층       엘리베이터    ");
             Logger::Log("                  ↑            ↑       ");
             Logger::Log("                  |            |       ");
-            Logger::Log(" 기록보관실  ← ▶메인홀  →  비상발전실    ");
+            Logger::Log(" 기록보관실  ← ▶메인홀  x  비상발전실    ");
             Logger::Log("     |            |                   ");
             Logger::Log("     ↓            ↓                    ");
             Logger::Log("   감시실   ←  격리병실");
@@ -351,7 +498,7 @@ void Game::Run()
             Logger::Log("                 2층       엘리베이터    ");
             Logger::Log("                  ↑            ↑       ");
             Logger::Log("                  |            |       ");
-            Logger::Log(" 기록보관실  ←  메인홀  →  비상발전실    ");
+            Logger::Log(" 기록보관실  ←  메인홀  x  비상발전실    ");
             Logger::Log("     |            ↑                   ");
             Logger::Log("     ↓            |                    ");
             Logger::Log("   감시실   ←  격리병실");
@@ -364,7 +511,7 @@ void Game::Run()
             Logger::Log("                 2층       엘리베이터    ");
             Logger::Log("                  ↑            ↑       ");
             Logger::Log("                  |            |       ");
-            Logger::Log(" 기록보관실  ←  메인홀  ← ▶비상발전실    ");
+            Logger::Log(" 기록보관실  ←  메인홀  x ▶비상발전실    ");
             Logger::Log("     |            |                   ");
             Logger::Log("     ↓            ↓                    ");
             Logger::Log("   감시실   ←  격리병실");
@@ -377,7 +524,7 @@ void Game::Run()
             Logger::Log("                 2층       엘리베이터    ");
             Logger::Log("                  ↑            ↑       ");
             Logger::Log("                  |            |       ");
-            Logger::Log("▶기록보관실  →  메인홀  →  비상발전실    ");
+            Logger::Log("▶기록보관실  →  메인홀  x  비상발전실    ");
             Logger::Log("     |            |                   ");
             Logger::Log("     ↓            ↓                    ");
             Logger::Log("   감시실   ←  격리병실");
@@ -390,7 +537,7 @@ void Game::Run()
             Logger::Log("                 2층       엘리베이터    ");
             Logger::Log("                  ↑            ↑       ");
             Logger::Log("                  |            |       ");
-            Logger::Log(" 기록보관실  ←  메인홀  →  비상발전실    ");
+            Logger::Log(" 기록보관실  ←  메인홀  x  비상발전실    ");
             Logger::Log("     ↑            |                   ");
             Logger::Log("     |            ↓                    ");
             Logger::Log("  ▶감시실   →  격리병실");
@@ -403,7 +550,7 @@ void Game::Run()
             Logger::Log("                 2층       엘리베이터    ");
             Logger::Log("                  ↑            ↑       ");
             Logger::Log("                  |            |       ");
-            Logger::Log(" 기록보관실  ←  메인홀  →  비상발전실    ");
+            Logger::Log(" 기록보관실  ←  메인홀  x  비상발전실    ");
             Logger::Log("     |            ↑                   ");
             Logger::Log("     ↓            |                    ");
             Logger::Log("   감시실   ← ▶격리병실");
@@ -925,7 +1072,9 @@ void Game::Run()
                 break;
 
             case 'd':
-                CurrentRoom = ROOM_THIRDFLOOR_GENERATORROOM;
+                Logger::Log("무너진 잔해로 길이 막혀있다.");
+                Logger::Log("(아무 키나 누르세요.)");
+                _getch();
                 break;
 
             default:
@@ -947,10 +1096,19 @@ void Game::Run()
                 break;
 
             case 'e':
-                Logger::Log("침대 옆 책상에서 눈에 띄는 종이를 발견했다.\n");
-				Logger::Space();
-                Logger::Log("[ 환자 기록지 ] 획득\n");
-                Logger::Log("(아무 키나 누르세요.)");
+                if(isolationRoomitem == false)
+                {
+                    isolationRoomitem = true;
+                    Logger::Log("침대 옆 책상에서 눈에 띄는 종이를 발견했다.\n");
+                    Logger::Space();
+                    Logger::Log("[ 환자 기록지 ] 획득\n");
+                    Logger::Log("(아무 키나 누르세요.)");
+                }
+                else
+                {
+                    Logger::Log("딱히 눈에 띄는 건 없다.\n");
+                    Logger::Log("(아무 키나 누르세요.)");
+                }
                 _getch();
                 break;
 
@@ -980,12 +1138,23 @@ void Game::Run()
                 break;
 
             case 'd':
-                Logger::Log("이름표와 번호가 꽂혀있는 병상이 줄지어 있다.\n");
-                Logger::Log("혹시 몰라 근처에 있던 펜으로 메모지에 기록했다.\n");
-                Logger::Space();
-                Logger::Log("'1번 강민석'  '2번 이준호'  '3번 박도윤'  '4번 최현우'\n");
-                Logger::Space();
-                Logger::Log("[ 병상 메모 ] 획득 \n");
+                if (isolationRoomitem2 == false)
+                {
+                    isolationRoomitem2 = true;
+                    Logger::Log("이름표와 번호가 꽂혀있는 병상이 줄지어 있다.\n");
+                    Logger::Log("혹시 몰라 근처에 있던 펜으로 메모지에 기록했다.\n");
+                    Logger::Space();
+                    Logger::Log("'1번 강민석'  '2번 이준호'  '3번 박도윤'  '4번 최현우'\n");
+                    Logger::Space();
+                    Logger::Log("[ 병상 메모 ] 획득 \n");
+                    Logger::Space();
+                    Logger::Log("(아무 키나 누르세요.)");
+                }
+                else
+                {
+                    Logger::Log("딱히 눈에 띄는 건 없다.\n");
+					Logger::Log("(아무 키나 누르세요.)");
+                }
                 _getch();
                 break;
 
@@ -1008,8 +1177,35 @@ void Game::Run()
                 break;
 
             case 'e':
-                Logger::Log("이 곳은 폐쇄수술실\n");
-                Logger::Log("(아무 키나 누르세요.)");
+                ++sergeryRoomCount;
+                if(sergeryRoomCount == 1)
+                {
+                    Logger::Log("공기 전체에 오래된 혈취가 눌어붙어 있다.\n");
+                    Logger::Log("수술대와 바닥은 훼손된 흔적으로 난잡하게 뒤엉켜 있다.\n");
+                    Logger::Log("조금만 더 살펴보면, 숨겨진 무언가를 찾아낼 수 있을 것 같다.\n");
+                }
+                else if (sergeryRoomCount == 2)
+                {
+                    Logger::Log("구석에 방치된 시신 하나가 눈에 들어온다.\n");
+                    Logger::Log("굳어버린 손끝 사이로 바지 주머니가 미세하게 불룩 솟아 있다.\n");
+                    Logger::Log("주머니를 뒤지자, 차가운 쇠의 감촉이 손끝에 닿을락 말락 한다.\n\n");
+                }
+				else if (sergeryRoomCount == 3)
+                {
+                    Logger::Log("피로 얼룩진 천 아래에서 작은 금속 열쇠 하나가 모습을 드러낸다.\n\n");
+                    Logger::Log("[ 비밀 통로 열쇠 ] 획득\n");
+					secretPassage = true;
+				}
+                else if (sergeryRoomCount == 10)
+                {
+                    Logger::Log("계속 뒤적거리다보니 빵과 물을 발견했다.\n");
+                    Logger::Log("[ 빵 ] 획득\n");
+                    Logger::Log("[ 물 ] 획득\n");
+				}
+                else
+                {
+                    Logger::Log("딱히 눈에 띄는 건 없다.\n");
+				}
                 _getch();
                 break;
 
@@ -1018,18 +1214,33 @@ void Game::Run()
                 break;
 
             case 's':
-                Logger::Log("아래쪽 벽에 뭔가 쓰여있다...\n");
+                Logger::Log("녹이 슨 수술 기구들과 얼룩진 벽이 눈에 띈다.\n");
                 _getch();
                 break;
 
             case 'a':
-                Logger::Log("왼쪽 벽에 뭔가 쓰여있다...\n");
+                Logger::Log("희미한 조명 아래, 수술대와 기구들은 오래전부터 방치된 듯 싸늘하게 가라앉아 있다.\n");
                 _getch();
                 break;
 
             case 'd':
-                Logger::Log("오른쪽 벽에 뭔가 쓰여있다...\n");
-                _getch();
+                if (secretPassage == false)
+                {
+                    Logger::Log("열쇠 구멍이 있는 소각로가 보인다.\n");
+                    Logger::Space();
+                    Logger::Log("수술실에 소각로? 열쇠 구멍은 뭐지?\n");
+                    Logger::Space();
+                    Logger::Log("열쇠가 근처에 있을까?\n");
+                    _getch();
+                }
+                else
+                {
+                    Logger::Log("소각로에 비밀 통로 열쇠를 사용했다.\n");
+                    Logger::Log("소각로가 천천히 열리며 숨겨진 통로가 모습을 드러낸다.\n");
+                    Logger::Log("(아무 키나 누르세요.)");
+                    _getch();
+					CurrentRoom = ROOM_THIRDFLOOR_GENERATORROOM;
+                }
                 break;
 
             default:
@@ -1051,8 +1262,7 @@ void Game::Run()
                 break;
 
             case 'e':
-                Logger::Log("이 곳은 감시실\n");
-                Logger::Log("(아무 키나 누르세요.)");
+                ControlRoomPuzzle();
                 _getch();
                 break;
 
@@ -1061,12 +1271,12 @@ void Game::Run()
                 break;
 
             case 's':
-                Logger::Log("아래쪽 벽에 뭔가 쓰여있다...\n");
+                Logger::Log("작동하지 않는 CCTV화면이 잔뜩 있다.\n");
                 _getch();
                 break;
 
             case 'a':
-                Logger::Log("왼쪽 벽에 뭔가 쓰여있다...\n");
+                Logger::Log("딱히 눈에 띄는 건 없다.\n");
                 _getch();
                 break;
 
@@ -1093,10 +1303,19 @@ void Game::Run()
                 break;
 
             case 'e':
-                Logger::Log("바닥에 파일이 떨어져있다.\n");
-                Logger::Space();
-                Logger::Log("[ 증상 단계 관찰일지 ] 획득\n");
-                Logger::Log("(아무 키나 누르세요.)");
+                if (archiveitem == false)
+                {
+                    archiveitem = true;
+                    Logger::Log("바닥에 파일이 떨어져있다.\n");
+                    Logger::Space();
+                    Logger::Log("[ 증상 단계 관찰일지 ] 획득\n");
+                    Logger::Log("(아무 키나 누르세요.)");
+                }
+                else
+                {
+                    Logger::Log("바닥이 마구잡이로 어질러져 있다.\n");
+					Logger::Log("(아무 키나 누르세요.)");
+                }
                 _getch();
                 break;
 
@@ -1124,7 +1343,7 @@ void Game::Run()
                 break;
 
             case 'a':
-                Logger::Log("왼쪽 벽에 뭔가 쓰여있다...\n");
+                Logger::Log("책상위에 컴퓨터가 여러 대 있지만 어느 것 하나 작동하지 않는다.\n");
                 _getch();
                 break;
 
@@ -1157,21 +1376,23 @@ void Game::Run()
                 break;
 
             case 'w':
-                Logger::Log("옥상으로 향하는 엘리베이터다. 작동은 하지 않는다. 전력이 필요할 것 같다.\n");
+                Logger::Log("옥상으로 향하는 엘리베이터다.\n");
+                Logger::Log("퓨즈 박스가 비어있어 작동은 하지 않는다.");
                 _getch();
                 break;
 
             case 's':
-                Logger::Log("아래쪽 벽에 뭔가 쓰여있다...\n");
-                _getch();
+                CurrentRoom = ROOM_THIRDFLOOR_SURGERYROOM;
                 break;
 
             case 'a':
-                CurrentRoom = ROOM_THIRDFLOOR_MAINHALL;
+                Logger::Log("무너진 잔해가 길을 막고 있다..\n");
+                _getch();
                 break;
 
             case 'd':
-                Logger::Log("오른쪽 벽에 뭔가 쓰여있다...\n");
+                Logger::Log("벽을 기대고 쓰러진 시체의 손에 무언가 들려있다.\n\n");
+                Logger::Log("[ 감시실 금고 메모 ] 획득\n");
                 _getch();
                 break;
 

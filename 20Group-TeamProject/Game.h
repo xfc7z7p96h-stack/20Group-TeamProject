@@ -56,6 +56,14 @@ private:
 	int corridorEndCount;
 
     bool archivePuzzle;
+    bool isolationRoomitem;
+    bool isolationRoomitem2;
+    bool archiveitem;
+	bool sergeryRoomitem;
+    bool secretPassage;
+	int sergeryRoomCount;
+    bool Opened;
+    bool fuse;
 
 public:
     Game();
@@ -65,6 +73,7 @@ public:
     void ShowHelp();
 
     void ArchivePuzzle();
+    void ControlRoomPuzzle();
 };
 
 
