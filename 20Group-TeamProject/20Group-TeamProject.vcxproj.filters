@@ -42,12 +42,15 @@
     <ClInclude Include="Game.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+<<<<<<< HEAD
     <ClInclude Include="Ending.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Intro.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+=======
+>>>>>>> newwork
     <ClInclude Include="Random.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -80,6 +83,7 @@
     <ClCompile Include="Game.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+<<<<<<< HEAD
     <ClCompile Include="Ending.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -92,5 +96,10 @@
     <ClCompile Include="Zombie.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+=======
+    <ClCompile Include="Random.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+>>>>>>> newwork
   </ItemGroup>
 </Project>
