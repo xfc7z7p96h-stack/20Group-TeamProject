@@ -2,7 +2,8 @@
 #include <iostream>
 #include <cstdlib>
 #include <ctime>
-
+#include <string>
+#include "Random.h"
 
 
 // 수정한 랜덤 함수에 대한 설명입니다.
@@ -14,19 +15,7 @@ Battle::Battle() // 생성자가 호출될 때 랜덤 시드값을 초기화하고, 그 값으로 랜덤 
 	// 여기서 랜덤 시드값 변수인 rd때문에 gen의 값이 완전히 랜덤하게 초기화됩니다. 만약 rd가 없다면, gen은 항상 같은 시드값으로 초기화되어 매번 같은 랜덤값이 나오게 됩니다.
 }
 
-int Battle::RandomRange(int min, int max) // min ~ max 범위의 랜덤 정수값을 반환하는 함수입니다.
-{
-    std::uniform_int_distribution<int> dist(min, max); // min ~ max까지 모든 숫자가 균등하게 나오게 하는 랜덤 규칙을 생성합니다.
-	return dist(gen); // 랜덤 생성 엔진 gen을 사용해서 dist 규칙에 따라 랜덤값을 생성하여 반환합니다.
 
-	// 즉, dist는 gen의 '최대값'을 min ~ max 범위로 변환하는 역할을 합니다.
-   
-    // 예를 들어 이 함수에서 dist의 범위를 1(min), 2(max)로 설정했다고 가정해보겠습니다.(1 ~ 2)
-    // gen의 최대값은 4294967295입니다.(그렇게 정해져 있음)
-    // 그러므로 gen은 0 ~ 4294967295 사이의 랜덤값을 생성합니다.
-    // dist는 gen의 최대값을 정확히 반반 나눠서 각 덩어리에 1이라는 번호와 2라는 번호를 붙입니다.(범위를 1~2로 설정했기 떄문에)
-	// gen이 0 ~ 2147483647 사이의 랜덤값을 생성했다면 dist는 1을 반환하고, 2147483648 ~ 4294967295 사이의 랜덤값을 생성했다면 2를 반환합니다.
-}
 
 
 void Battle::Encounter(Player& player, Inventory& inven)
@@ -66,50 +55,21 @@ void Battle::Encounter(Player& player, Inventory& inven)
 
     // 플레이어 공격
     int end = 1;
+    bool pass = false;
     do
     {
-        int playerAnswer;
+        std::string playerAnswer;
         int manager0 = 0;
+        player.ShowStatus();
+        monster->ShowStatus();
         do
         {
-            std::cout << "\n[1.칼로 찌르기! " << " /" << "2.인벤토리 " << " /" << "3.총으로 공격!]" << std::endl;
+            std::cout << "\n[Q.공격! " << " /" << "W.인벤토리 " << " /" << "E.도망!]" << std::endl;
 
             std::cin >> playerAnswer;
-            switch (playerAnswer)
+            if(playerAnswer == "Q")
             {
-            case 1:
-            {
-                monster->TakeDamage(player.GetAttack()); // 칼로 찌르기
-                monster->ShowStatus();
-                manager0 = 0;
-                break;
-            }
-            case 2:
-            {
-                inven.ShowInventory();
-                int manager1;
-                do
-                {
-                    std::cout << "\n몇번쨰 아이템을 사용하시겠습니다??" << "\nanswer:";
-                    std::cin >> playerAnswer;
-                    if (playerAnswer  > inven.GetSize() && playerAnswer < 0)
-                    {
-                        manager1 = 1;
-                    }
-                    else
-                    {
-                        manager1 = 0;
-                    }
-                } while (manager1);
-                inven.UseItem(playerAnswer -1, player);
-                manager0 = 0;
-
-                break;
-            }
-
-            case 3:
-            {
-                if (inven.HasPistol())// 총 구현 총알이 없으면 총은 자동으로 인벤토리로
+                if (inven.HasPistol()) //플레이어가 총을 창착하고 있는지 없는지 판단으로 바꿔야함
                 {
                     if (inven.GetPistolAmmo() > 0)
                     {
@@ -117,6 +77,8 @@ void Battle::Encounter(Player& player, Inventory& inven)
                         monster->TakeDamage(gunDamage);
                         monster->ShowStatus();
                         inven.ConsumePistolAmmo();
+                        pass = true;
+                        std::cout << "\n권총으로";
                         manager0 = 0;
                     }
                     else
@@ -133,6 +95,8 @@ void Battle::Encounter(Player& player, Inventory& inven)
                         monster->TakeDamage(gunDamage);
                         monster->ShowStatus();
                         inven.ConsumeShotgunAmmo();
+                        pass = true;
+                        std::cout << "\n샷건으로";
                         manager0 = 0;
                     }
                     else
@@ -145,18 +109,59 @@ void Battle::Encounter(Player& player, Inventory& inven)
                     std::cout << "\n총을 장착하고 있지 않습니다!!";
                     manager0 = 1;
                 }
+                if (inven.HasPistol() && inven.HasShotgun())
+                {
+                    monster->TakeDamage(player.GetAttack()); // 칼로 찌르기
+                    monster->ShowStatus();
+                    std::cout << "\n칼로";
+                    manager0 = 0;
+                }
                 break;
             }
-            default:
-                std::cout << "\n숫자를 잘못 입력하셨습니다 다시 입력해 주세요!!!";
+            else if (playerAnswer == "W")
+            {
+                inven.ShowInventory();
+                int manager1;
+                int playerAnswer;
+                do
+                {
+                    std::cout << "\n몇번쨰 아이템을 사용하시겠습니다??" << "\nanswer:";
+                    std::cin >> playerAnswer;
+                    if (playerAnswer  > inven.GetSize() && playerAnswer < 0)
+                    {
+                        manager1 = 1;
+                    }
+                    else
+                    {
+                        manager1 = 0;
+                    }
+                } while (manager1);
+                inven.UseItem(playerAnswer -1, player);
                 manager0 = 1;
+
                 break;
+            }
+            else if (playerAnswer == "E")
+            {
+                int randomRun = RandomRange(0, 1);
+
+                if (randomRun == 0)
+                {
+                    std::cout << "\n도망 성공!! 전투 종료";
+                    return;
+                }
+                if (randomRun == 1)
+                {
+                    std::cout << "\n도망 실패... 대가를 치를 차례입니다...";
+                }
+                manager0 = 0;
+           
             }
         } while (manager0);
 
 
 
-        std::cout << "\n공격!" << std::endl;
+        std::cout << "공격!" << std::endl;
         std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // 버퍼 비우기
 
 
@@ -179,15 +184,22 @@ void Battle::Encounter(Player& player, Inventory& inven)
         }
 
         // 몬스터 반격
-        std::cout << "\n" << monster->GetName() << "의 반격!" << std::endl;
-        player.TakeDamage(monster->GetAttack());
-
-        std::cout << "남은 HP: " << player.GetHp() << "/" << player.GetMaxHp() << std::endl;
-
-        if (player.IsDead())
+        if (pass = true)
         {
-            std::cout << "당신은 사망했습니다." << std::endl;
-            end = 0;
+            std::cout << "\n좀비팔이 총보다 짧다,,!";
+        }
+        while (pass)
+        {
+            std::cout << "\n" << monster->GetName() << "의 반격!" << std::endl;
+            player.TakeDamage(monster->GetAttack());
+
+            std::cout << "남은 HP: " << player.GetHp() << "/" << player.GetMaxHp() << std::endl;
+
+            if (player.IsDead())
+            {
+                std::cout << "당신은 사망했습니다." << std::endl;
+                end = 0;
+            }
         }
     }while (end);
 }
