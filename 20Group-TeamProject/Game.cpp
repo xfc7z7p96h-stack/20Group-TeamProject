@@ -24,28 +24,35 @@ Game::Game()
     corridorCount = 0;
     storageCount = 0;
     corridorEndCount = 0;
+    storageWater = false;
 
     CurrentRoom = ROOM_OUTSIDE;
     FirstFloorIntro = false;
     SecondFloorIntro = false;
     ThirdFloorIntro = false;
 
-	archivePuzzle = false;
-	isolationRoomitem = false;
-	isolationRoomitem2 = false;
-	archiveitem = false;
-	sergeryRoomitem = false;
+    archivePuzzle = false;
+    isolationRoomitem = false;
+    isolationRoomitem2 = false;
+    archiveitem = false;
+    sergeryRoomitem = false;
+    secretPassage = false;
     sergeryRoomCount = 0;
     Opened = false;
     fuse = false;
+    ending = false;
 
     breadCount = 0;
     waterCount = 0;
 }
-void Game::RandomEncounter()
+void Game::RandomEncounter()   /// 인카운터 확률 조정
 {
     if (Random::Chance(30))
     {
+        system("cls");
+        Logger::Log("[ !!!! ] 시야 끝에서 좀비가 비틀거리며 다가온다...\n");
+        Logger::Log("\n(아무 키나 누르세요)\n");
+        _getch();
         battle.Encounter(player, inven);
     }
 }
@@ -258,10 +265,11 @@ void Game::ArchivePuzzle()
 
 void Game::ShowHelp()
 {
-    Logger::Log("새로운 방이나 다른 층 진입 시, 일정 확률로 살아있는 시체와 마주하게 됩니다.");
-    Logger::Log("근접 공격은 횟수에 제한이 없지만, 당신은 반드시 반격을 당하게 됩니다.");
-    Logger::Log("권총 또는 샷건으로 공격 시 총알을 소비하지만 반격은 당하지 않습니다.");
-    Logger::Log("싸울지 도망칠지는 당신의 몫입니다.\n");
+    Logger::Log("| 새로운 방이나 다른 층 진입 시, 일정 확률로 좀비와 마주하게 됩니다.");
+    Logger::Log("| 근접 공격은 횟수에 제한이 없지만, 반드시 반격을 당하게 됩니다.");
+    Logger::Log("| 권총 또는 샷건으로 공격 시 총알을 소비하지만 반격은 당하지 않습니다.");
+    Logger::Log("| 도망을 선택할 경우 50%의 확률로 도망칠 수 있습니다.");
+    Logger::Log("| 도망 실패시, 좀비에게 붙잡혀 공격 당한 후 전투를 재개합니다.\n");
     Logger::Log("(아무 키나 누르세요.)");
     _getch();
 }
@@ -277,7 +285,7 @@ void Game::ShowStatus()
 
 void Game::Run()
 {
-    // PlayIntro();
+    PlayIntro();
 
     bool gameRunning = true;
 
@@ -382,6 +390,11 @@ void Game::Run()
             Logger::Log("내 본능이 그렇게 말하고 있었다.");
             Logger::Space();
             Logger::Log("( [W] 건물에 들어간다. )\n");
+            Logger::Space();
+            inven.AddItem(Item("권총", 0, ItemType::PISTOL));
+            inven.AddItem(Item("샷건", 0, ItemType::SHOTGUN));
+            inven.AddItem(Item("권총 탄약", 3, ItemType::PISTOL_AMMO));
+            inven.AddItem(Item("스페셜 허브", 9999, ItemType::HP_POTION));////////초기 장비 지급
             break;
 
         case ROOM_FIRSTFLOOR_CORRIDOR:
@@ -572,6 +585,11 @@ void Game::Run()
             break;
 
         }
+
+        Logger::Space();
+        player.ShowStatus();
+        Logger::Space();
+
         if (secretRoomQuest)
         {
             Logger::Space();
@@ -580,6 +598,7 @@ void Game::Run()
             Logger::Log("복도 끝 : " + std::to_string(corridorEndCount));
 			Logger::Space();
         }
+
 
         if (inventoryOpen)
         {
@@ -660,8 +679,9 @@ void Game::Run()
                 break;
 
             case 'w':
-                RandomEncounter();
+                
                 CurrentRoom = ROOM_FIRSTFLOOR_STORAGE;
+                RandomEncounter();
                 break;
 
             case 's':
@@ -677,8 +697,9 @@ void Game::Run()
                 break;
 
             case 'd':
-                RandomEncounter();
+           
                 CurrentRoom = ROOM_FIRSTFLOOR_CORRIDOREND;
+                RandomEncounter();
                 break;
 
             default:
@@ -726,7 +747,9 @@ void Game::Run()
                 break;
 
             case 's':
+
                 CurrentRoom = ROOM_FIRSTFLOOR_CORRIDOR;
+                RandomEncounter();
                 break;
 
             case 'a':
@@ -792,6 +815,7 @@ void Game::Run()
                 {
                     CurrentFloor = 2;
                     CurrentRoom = ROOM_SECONDFLOOR_LOBBY;
+                    RandomEncounter();
                 }
                 else if (chaincutter == true)
                 {
@@ -820,6 +844,7 @@ void Game::Run()
                     }
 
                     CurrentRoom = ROOM_SECONDFLOOR_LOBBY;
+                    RandomEncounter();
                 }
                 else
                 {
@@ -830,7 +855,9 @@ void Game::Run()
                 break;
 
             case 'a':
+ 
                 CurrentRoom = ROOM_FIRSTFLOOR_CORRIDOR;
+                RandomEncounter();
                 break;
 
             case 'd':
@@ -866,7 +893,9 @@ void Game::Run()
 
             case 'w':
                 CurrentFloor = 1;
+
                 CurrentRoom = ROOM_FIRSTFLOOR_CORRIDOREND;
+                RandomEncounter();
                 break;
 
             case 's':
@@ -886,21 +915,29 @@ void Game::Run()
                     Logger::Log("\n(아무 키나 누르세요)");
                     ThirdFloorIntro = true;
                     _getch();
+ 
                     CurrentRoom = ROOM_THIRDFLOOR_MAINHALL;
+                    RandomEncounter();
                 }
                 else
                 {
                     CurrentFloor = 3;
+
                     CurrentRoom = ROOM_THIRDFLOOR_MAINHALL;
+                    RandomEncounter();
 				}
                 break;
 
             case 'a':
+
                 CurrentRoom = ROOM_SECONDFLOOR_RESTROOM;
+                RandomEncounter();
                 break;
 
             case 'd':
+
                 CurrentRoom = ROOM_SECONDFLOOR_MEETINGROOM;
+                RandomEncounter();
                 break;
 
             default:
@@ -954,7 +991,9 @@ void Game::Run()
                 break;
 
             case 'd':
+ 
                 CurrentRoom = ROOM_SECONDFLOOR_LOBBY;
+                RandomEncounter();
                 break;
 
             default:
@@ -1005,7 +1044,9 @@ void Game::Run()
                 else
                 {
 					secretRoomQuest = false;
+
                     CurrentRoom = ROOM_SECONDFLOOR_SECRETROOM;
+                    RandomEncounter();
                 }
                 break;
 
@@ -1016,7 +1057,9 @@ void Game::Run()
                 break;
 
             case 'a':
+
                 CurrentRoom = ROOM_SECONDFLOOR_LOBBY;
+                RandomEncounter();
                 break;
 
             case 'd':
@@ -1057,7 +1100,9 @@ void Game::Run()
                 break;
 
             case 's':
+
                 CurrentRoom = ROOM_SECONDFLOOR_MEETINGROOM;
+                RandomEncounter();
                 break;
 
             default:
@@ -1088,15 +1133,21 @@ void Game::Run()
                 break;
 
             case 'w':
+
                 CurrentRoom = ROOM_SECONDFLOOR_LOBBY;
+                RandomEncounter();
                 break;
 
             case 's':
+
                 CurrentRoom = ROOM_THIRDFLOOR_ISOLATIONROOM;
+                RandomEncounter();
                 break;
 
             case 'a':
+
                 CurrentRoom = ROOM_THIRDFLOOR_ARCHIVE;
+                RandomEncounter();
                 break;
 
             case 'd':
@@ -1142,13 +1193,17 @@ void Game::Run()
                 break;
 
             case 'w':
+
                 CurrentRoom = ROOM_THIRDFLOOR_MAINHALL;
+                RandomEncounter();
                 break;
 
             case 's':
                 if (archivePuzzle == true)
                 {
+ 
                     CurrentRoom = ROOM_THIRDFLOOR_SURGERYROOM;
+                    RandomEncounter();
                 }
                 else
                 {
@@ -1163,7 +1218,9 @@ void Game::Run()
                 break;
 
             case 'a':
+
                 CurrentRoom = ROOM_THIRDFLOOR_CONTROLROOM;
+                RandomEncounter();
                 break;
 
             case 'd':
@@ -1245,7 +1302,9 @@ void Game::Run()
                 break;
 
             case 'w':
+    
                 CurrentRoom = ROOM_THIRDFLOOR_ISOLATIONROOM;
+                RandomEncounter();
                 break;
 
             case 's':
@@ -1268,14 +1327,21 @@ void Game::Run()
                     Logger::Log("열쇠가 근처에 있을까?\n");
                     _getch();
                 }
-                else
+                else if (ending == false)
                 {
+                    ending = true;
                     Logger::Log("소각로에 비밀 통로 열쇠를 사용했다.\n");
                     Logger::Log("소각로가 천천히 열리며 숨겨진 통로가 모습을 드러낸다.\n");
                     Logger::Log("(아무 키나 누르세요.)");
                     _getch();
-					CurrentRoom = ROOM_THIRDFLOOR_GENERATORROOM;
+
+                    CurrentRoom = ROOM_THIRDFLOOR_GENERATORROOM;
                 }
+                else
+                {
+                    CurrentRoom = ROOM_THIRDFLOOR_GENERATORROOM;
+                }
+                    
                 break;
 
             default:
@@ -1302,7 +1368,9 @@ void Game::Run()
                 break;
 
             case 'w':
+
                 CurrentRoom = ROOM_THIRDFLOOR_ARCHIVE;
+                RandomEncounter();
                 break;
 
             case 's':
@@ -1316,7 +1384,9 @@ void Game::Run()
                 break;
 
             case 'd':
+
                 CurrentRoom = ROOM_THIRDFLOOR_ISOLATIONROOM;
+                RandomEncounter();
                 break;
 
             default:
@@ -1375,7 +1445,9 @@ void Game::Run()
                 break;
 
             case 's':
+
                 CurrentRoom = ROOM_THIRDFLOOR_CONTROLROOM;
+                RandomEncounter();
                 break;
 
             case 'a':
@@ -1384,7 +1456,9 @@ void Game::Run()
                 break;
 
             case 'd':
+
                 CurrentRoom = ROOM_THIRDFLOOR_MAINHALL;
+                RandomEncounter();
                 break;
 
             default:
@@ -1426,7 +1500,9 @@ void Game::Run()
                 break;
 
             case 's':
+ 
                 CurrentRoom = ROOM_THIRDFLOOR_SURGERYROOM;
+                RandomEncounter();
                 break;
 
             case 'a':
@@ -1455,11 +1531,10 @@ void Game::Run()
 void Game::Ending()
 {
     Logger::Log("엘리베이터의 전원이 들어왔다.\n\n");
-    Logger::Log("이 건물도 이제 지옥이나 다름없다.\n");
-    Logger::Log("나는 옥상 버튼을 눌렀다.\n");
+    Logger::Log("나는 곧장 옥상으로 향했다.\n");
     _getch();
 
-    if (breadCount > 5 || waterCount > 5)
+    if (breadCount < 5 || waterCount < 5)
     {
         Ending::StarvationEnding();
     }

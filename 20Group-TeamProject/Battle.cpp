@@ -1,19 +1,184 @@
 #include "Battle.h"
-#include <iostream>
-#include <cstdlib>
-#include <ctime>
-#include <string>
+#include "Logger.h"
 #include "Random.h"
+#include <windows.h>
+#include <iostream>
+#include <memory>
+#include <conio.h>
+#include <cstdlib>
 
-void Battle::Encounter(Player& player, Inventory& inven)
+void ClearKeyBuffer()
 {
-    if (player.IsDead())
+    while (_kbhit())
     {
-        std::cout << "사망한 상태입니다." << std::endl;
+        _getch();
+    }
+}
+
+int Battle::AttackDamage(Player& player, AttackType attackType)      ////////////공격 데미지 결정
+{
+    if (attackType == AttackType::Pistol)
+    {
+        return player.GetAttack() + 10 * player.GetLevel();
+    }
+    else if (attackType == AttackType::Shotgun)
+    {
+        return player.GetAttack() + 25 * player.GetLevel();
+    }
+
+    return player.GetAttack();
+}
+
+bool Battle::UseAmmo(Inventory& inven, AttackType attackType)       ///////////총알 사용
+{
+    if (attackType == AttackType::Pistol)
+    {
+        if (inven.GetPistolAmmo() <= 0)
+        {
+            std::cout << "\n권총 탄약이 없습니다.\n";
+            return false;
+        }
+
+        inven.ConsumePistolAmmo();
+        return true;
+    }
+    else if (attackType == AttackType::Shotgun)
+    {
+        if (inven.GetShotgunAmmo() <= 0)
+        {
+            std::cout << "\n샷건 탄약이 없습니다.\n";
+            return false;
+        }
+
+        inven.ConsumeShotgunAmmo();
+        return true;
+    }
+
+    return true;
+}
+
+void Battle::AttackMessage(AttackType attackType)                 //////////////공격 메세지
+{
+    if (attackType == AttackType::Pistol)
+    {
+        std::cout << "\n권총 사격!\n\n";
+    }
+    else if (attackType == AttackType::Shotgun)
+    {
+        std::cout << "\n샷건 발사!\n\n";
+    }
+    else
+    {
+        std::cout << "\n칼로 찔렀다!\n\n";
+    }
+
+    Sleep(500);
+}
+
+void Battle::MonsterStatus(const Zombie& monster)                         //////////////몬스터 정보 함수
+{
+    std::cout << "\n[ " << monster.GetName() << " ]\n";
+    std::cout << "체력 " << monster.GetHp() << "/" << monster.GetMaxHp() << "\n";
+    std::cout << "공격력 " << monster.GetAttack() << "\n";
+    std::cout << monster.GetSpecialText() << "\n\n";
+}
+
+bool Battle::PlayerAttack(Player& player, Zombie& monster, AttackType attackType) /////////////// 플레이어 공격 함수
+{
+    int damage = AttackDamage(player, attackType);
+
+    bool critical = Random::Chance(15);            /////////////// 크리티컬 확률 15%, 3배 데미지
+    if (critical)
+    {
+        std::cout << "\n...본의 아니게 머리를 정확히 노렸다!(X 3)\n\n";
+        Sleep(500);
+
+        damage = static_cast<int>(damage * 3.0f);
+    }
+
+    if (monster.TryDodge(attackType))
+    {
+        std::cout << "\n" << monster.GetName() << "가 공격을 회피했다...\n";
+        return false;
+    }
+
+    monster.TakeDamage(damage);
+
+    Logger::Damage(monster.GetName(), damage);
+    Logger::Space();
+
+    if (monster.IsDead())
+    {
+        std::cout << monster.GetName() << "가 쓰러졌다...\n\n";
+        Sleep(500);
+        return true;
+    }
+
+    MonsterCounter(player, monster, attackType);
+    return false;
+}
+
+void Battle::MonsterCounter(Player& player, Zombie& monster, AttackType attackType)       //////////////몬스터 반격 함수
+{
+    if (!monster.CanCounter(attackType))
+    {
         return;
     }
 
-    int randomMonster = Random::Range(0, 2); // 0 ~ 2 사이의 랜덤값 생성
+    int monsterDamage = monster.GetAttack();
+
+    Sleep(500);
+    std::cout << "\n" << monster.GetName() << "가 달려들어 반격했다..!\n\n";
+    Sleep(500);
+
+    player.TakeDamage(monsterDamage);
+    Logger::Damage(player.GetName(), monsterDamage);
+
+    monster.OnSuccessfulCounter(monsterDamage);
+
+    NormalZombie* normalZombie = dynamic_cast<NormalZombie*>(&monster);
+    if (normalZombie != nullptr)
+    {
+        std::cout << "\n" << monster.GetName() << "가 피를 마셔 체력을 회복했다...\n";
+        std::cout << monster.GetName() << " HP : " << monster.GetHp() << "/" << monster.GetMaxHp() << "\n";
+        Sleep(500);
+    }
+
+    if (player.IsDead())
+    {
+        std::cout << "\n당신은 사망했습니다.\n";
+        std::cout << "게임 오버.\n";
+        std::exit(0);
+    }
+}
+
+void Battle::BattleReward(Player& player, Inventory& inven) /////////////////////////// 전투 보상 함수
+{
+    Item rewardItem = RandomItem();
+    int rewardGold = RandomGold();
+
+    player.GainExp(35);
+    Sleep(500);
+
+    inven.AddItem(rewardItem);
+    Sleep(500);
+
+    inven.AddGold(rewardGold);
+    Sleep(500);
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+void Battle::Encounter(Player& player, Inventory& inven)        /////////////////////////// 인카운터 본문
+{
+    if (player.IsDead())
+    {
+        std::cout << "이미 사망한 상태입니다.\n";
+        _getch();
+        std::exit(0);
+    }
+
+    int randomMonster = Random::Range(0, 4);           /////////////// 출현 확률 피좀비 60%, 갑옷좀비 20%, 재빠른 좀비 20%
     std::unique_ptr<Zombie> monster;
 
     switch (randomMonster)
@@ -27,221 +192,140 @@ void Battle::Encounter(Player& player, Inventory& inven)
     case 2:
         monster = std::make_unique<FastZombie>();
         break;
+    case 3:
+        monster = std::make_unique<NormalZombie>();
+        break;
+    case 4:
+        monster = std::make_unique<NormalZombie>();
+        break;
     }
+
+    int playerLevel = player.GetLevel();
+    monster->AddMaxHp(playerLevel * 20);
+    monster->AddAttack(playerLevel * 5);
 
     if (!monster)
     {
-        std::cout << "좀비 생성 실패" << std::endl;
+        std::cout << "적 생성에 실패했습니다.\n";
+        _getch();
         return;
     }
 
-    std::cout << "\n===== 전투 시작 =====" << std::endl;
-    std::cout << monster->GetName() << std::endl;
-    std::cout << "HP: " << monster->GetHp() << "/" << monster->GetMaxHp() << std::endl;
-    std::cout << "공격력: " << monster->GetAttack() << std::endl;
-
-    // 플레이어 공격
-    int end = 1;
-    bool pass = false;
-    do
+    while (true)
     {
-        std::string playerAnswer;
-        int manager0 = 0;
+        system("cls");
+
         player.ShowStatus();
-        monster->ShowStatus();
-        do
+        MonsterStatus(*monster);
+
+        std::cout << "================================================\n";
+        std::cout << "[Q] 공격   [W] 인벤토리   [E] 도망\n";
+
+        ClearKeyBuffer();
+        char input = _getch();
+
+        if (input >= 'a' && input <= 'z')
         {
-            std::cout << "\n[Q.공격! " << " /" << "W.인벤토리 " << " /" << "E.도망!]" << std::endl;
-
-            std::cin >> playerAnswer;
-            if(playerAnswer == "Q")
-            {
-                Player::WeaponType weapon = player.GetArmedWeapon();
-                if (weapon == Player::WeaponType::pistol) //플레이어가 총을 창착하고 있는지 없는지 판단으로 바꿔야함
-                {
-                    if (inven.GetPistolAmmo())
-                    {
-                        int gunDamage = player.GetAttack() + 10; // 총대미지 기본 설정 벨런스 조절시ㅣ 여기 조정
-                        monster->TakeDamage(gunDamage);
-                        monster->ShowStatus();
-                        inven.ConsumePistolAmmo();
-                        pass = true;
-                        std::cout << "\n권총으로";
-                        manager0 = 0;
-                    }
-                    else
-                    {
-                        std::cout << "\n총알이 없습니다!!";
-                        manager0 = 1;
-                    }
-                }
-                else if (weapon == Player::WeaponType::shotgun)
-                {
-                    if (inven.GetShotgunAmmo() > 0)
-                    {
-                        int gunDamage = player.GetAttack() + 25; // 총대미지 기본 설정 벨런스 조절시ㅣ 여기 조정
-                        monster->TakeDamage(gunDamage);
-                        monster->ShowStatus();
-                        inven.ConsumeShotgunAmmo();
-                        pass = true;
-                        std::cout << "\n샷건으로";
-                        manager0 = 0;
-                    }
-                    else
-                    {
-                        std::cout << "\n샷건 총알이 없습니다";
-                    }
-                }
-                else
-                {
-                    std::cout << "\n총을 장착하고 있지 않습니다!!";
-                    manager0 = 1;
-                }
-                if (inven.HasPistol() && inven.HasShotgun())
-                {
-                    monster->TakeDamage(player.GetAttack()); // 칼로 찌르기
-                    monster->ShowStatus();
-                    std::cout << "\n칼로";
-                    manager0 = 0;
-                }
-                break;
-            }
-            else if (playerAnswer == "W")
-            {
-                inven.ShowInventory();
-                int manager1;
-                int playerAnswer;
-                do
-                {
-                    std::cout << "\n몇번쨰 아이템을 사용하시겠습니다??" << "\nanswer:";
-                    std::cin >> playerAnswer;
-                    if (playerAnswer  > inven.GetSize() && playerAnswer < 0)
-                    {
-                        manager1 = 1;
-                    }
-                    else
-                    {
-                        manager1 = 0;
-                    }
-                } while (manager1);
-                inven.UseItem(playerAnswer -1, player);
-                manager0 = 1;
-
-                break;
-            }
-            else if (playerAnswer == "E")
-            {
-                int randomRun = Random::Range(0, 1);
-
-                if (randomRun == 0)
-                {
-                    std::cout << "\n도망 성공!! 전투 종료";
-                    return;
-                }
-                if (randomRun == 1)
-                {
-                    std::cout << "\n도망 실패... 대가를 치를 차례입니다...";
-                }
-                manager0 = 0;
-           
-            }
-        } while (manager0);
-
-
-
-        std::cout << "공격!" << std::endl;
-        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // 버퍼 비우기
-
-
-        std::cout << monster->GetName() << "의 남은 HP: " << monster->GetHp() << "/" << monster->GetMaxHp() << std::endl;
-
-        // 몬스터 처치 시
-        if (monster->IsDead())
-        {
-            Item rewardItem = RandomItem();
-            int rewardGold = RandomGold();
-
-            std::cout << "\n처치 성공!" << std::endl;
-            std::cout << "획득 아이템: " << rewardItem.GetName() << std::endl;
-            std::cout << "획득 골드: " << rewardGold << std::endl;
-
-            inven.AddItem(rewardItem);
-            player.AddGold(rewardGold);
-
-            return;
+            input = input - 32;
         }
 
-        // 몬스터 반격
-        if (pass = true)
+        if (input == 'Q')
         {
-            std::cout << "\n좀비팔이 총보다 짧다,,!";
-        }
-        while (pass)
-        {
-            std::cout << "\n" << monster->GetName() << "의 반격!" << std::endl;
-            player.TakeDamage(monster->GetAttack());
+            Player::WeaponType weapon = player.GetArmedWeapon();
+            AttackType attackType = AttackType::Knife;
 
-            std::cout << "남은 HP: " << player.GetHp() << "/" << player.GetMaxHp() << std::endl;
-
-            if (player.IsDead())
+            if (weapon == Player::WeaponType::pistol)
             {
-                std::cout << "당신은 사망했습니다." << std::endl;
-                end = 0;
+                attackType = AttackType::Pistol;
+            }
+            else if (weapon == Player::WeaponType::shotgun)
+            {
+                attackType = AttackType::Shotgun;
+            }
+
+            if (!UseAmmo(inven, attackType))
+            {
+                ClearKeyBuffer();
+                _getch();
+                continue;
+            }
+
+            AttackMessage(attackType);
+
+            bool battleEnd = PlayerAttack(player, *monster, attackType);
+
+            if (battleEnd)
+            {
+                BattleReward(player, inven);
+                ClearKeyBuffer();
+                _getch();
+                return;
+            }
+
+            ClearKeyBuffer();
+            _getch();
+        }
+        else if (input == 'W')
+        {
+            system("cls");
+            inven.OpenInventory(player);
+        }
+        else if (input == 'E')
+        {
+            std::cout << "\n도망을 시도합니다...\n\n";
+            Sleep(500);
+
+            bool runSuccess = Random::Chance(50);
+
+            if (runSuccess)
+            {
+                std::cout << "\n도망에 성공했습니다.\n\n";
+                ClearKeyBuffer();
+                _getch();
+                return;
+            }
+            else
+            {
+                int monsterDamage = monster->GetAttack();
+
+                std::cout << "\n도망에 실패했습니다!\n\n";
+                Sleep(500);
+
+                player.TakeDamage(monsterDamage);
+
+                std::cout << "\n" << monster->GetName() << "에게 붙잡혀 공격당했다...\n\n";
+                Logger::Damage(player.GetName(), monsterDamage);
+
+                if (player.IsDead())
+                {
+                    std::cout << "\n당신은 사망했습니다.\n";
+                    std::cout << "게임 오버.\n";
+                    std::exit(0);
+                }
+
+                ClearKeyBuffer();
+                _getch();
             }
         }
-    }while (end);
+    }
 }
 
 Item Battle::RandomItem()
 {
-	switch (Random::Range(0, 3)) // 0 ~ 1 사이의 랜덤값 생성
+    switch (Random::Range(1, 3))
     {
-    case 0:
-        return Item("HP Potion", 50, ItemType::HP_POTION);
     case 1:
-        return Item("Attack Potion", 10, ItemType::ATTACK_POTION);
+        return Item("샷건 탄약", Random::Range(1, 2), ItemType::SHOTGUN_AMMO);
     case 2:
-        return Item("Shotgun Ammo", Random::Range(1, 3), ItemType::SHOTGUN_AMMO);
+        return Item("권총 탄약", Random::Range(2, 3), ItemType::PISTOL_AMMO);
     case 3:
-        return Item("Pistol Ammo", Random::Range(2, 3), ItemType::PISTOL_AMMO);
+        return Item("권총 탄약", Random::Range(2, 3), ItemType::PISTOL_AMMO);
     }
+
+    return Item("권총 탄약", 1, ItemType::PISTOL_AMMO);
 }
-
-
-//Item Battle::RandomItem(int r)
-//{
-//	r % 4; // 0 ~ 1
-//	switch (r)
-//	{
-//	case 0:
-//	{
-//		Item HpPotion("HP Potion", 50, ItemType::HP_POTION);
-//		return HpPotion;
-//	}
-//	case 1:
-//		Item AttackPotion("Attack Potion", 10, ItemType::ATTACK_POTION);
-//		return AttackPotion;
-//	}
-//}
 
 int Battle::RandomGold()
 {
-    return Random::Range(6, 15); // 6 ~ 15 사이의 랜덤값을 반환
+    return Random::Range(50, 100);
 }
-
-//int Battle::RandomGold(int r)
-//{
-//    r = r + 3;
-//
-//    if (r < 8)
-//    {
-//        r = r * 2; // 골드 최소 드랍양 6up 15down
-//    }
-//
-//    if (r > 15)
-//    {
-//        r = 15;
-//    }
-//
-//    return r;
-//}

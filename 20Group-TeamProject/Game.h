@@ -1,70 +1,63 @@
 #pragma once
 #include <iostream>
-#include "string.h"
+#include <string>
 #include "Battle.h"
 
-namespace
+enum RoomState
 {
-    enum RoomState
-    {
-        ROOM_OUTSIDE = 0,
-        ROOM_FIRSTFLOOR_CORRIDOR,
-        ROOM_FIRSTFLOOR_STORAGE,
-        ROOM_FIRSTFLOOR_CORRIDOREND,
+    ROOM_OUTSIDE = 0,
+    ROOM_FIRSTFLOOR_CORRIDOR,
+    ROOM_FIRSTFLOOR_STORAGE,
+    ROOM_FIRSTFLOOR_CORRIDOREND,
 
-        ROOM_SECONDFLOOR_LOBBY,
-        ROOM_SECONDFLOOR_RESTROOM,
-        ROOM_SECONDFLOOR_MEETINGROOM,
-        ROOM_SECONDFLOOR_SECRETROOM,
+    ROOM_SECONDFLOOR_LOBBY,
+    ROOM_SECONDFLOOR_RESTROOM,
+    ROOM_SECONDFLOOR_MEETINGROOM,
+    ROOM_SECONDFLOOR_SECRETROOM,
 
-        ROOM_THIRDFLOOR_MAINHALL,
-        ROOM_THIRDFLOOR_ISOLATIONROOM,
-		ROOM_THIRDFLOOR_ARCHIVE,
-        ROOM_THIRDFLOOR_GENERATORROOM,
-        ROOM_THIRDFLOOR_CONTROLROOM,
-        ROOM_THIRDFLOOR_SURGERYROOM
-
-
-    };
-
-
-}
+    ROOM_THIRDFLOOR_MAINHALL,
+    ROOM_THIRDFLOOR_ISOLATIONROOM,
+    ROOM_THIRDFLOOR_ARCHIVE,
+    ROOM_THIRDFLOOR_GENERATORROOM,
+    ROOM_THIRDFLOOR_CONTROLROOM,
+    ROOM_THIRDFLOOR_SURGERYROOM
+};
 
 class Game
 {
 private:
-
     Battle battle;
-	Player player;
-	Inventory inven;
+    Player player;
+    Inventory inven;
+
     bool inventoryOpen;
     RoomState CurrentRoom;
     bool FirstFloorIntro;
     bool SecondFloorIntro;
-	bool ThirdFloorIntro;
-
+    bool ThirdFloorIntro;
 
     std::string CurrentPlace;
     int CurrentFloor;
     bool chaincutter;
-	bool firstfloorclear;
+    bool firstfloorclear;
     bool secretRoom;
     bool secretRoomQuest;
     bool secretRoomKey;
     int corridorCount;
-	int storageCount;
-	int corridorEndCount;
+    int storageCount;
+    int corridorEndCount;
     bool storageWater;
 
     bool archivePuzzle;
     bool isolationRoomitem;
     bool isolationRoomitem2;
     bool archiveitem;
-	bool sergeryRoomitem;
+    bool sergeryRoomitem;
     bool secretPassage;
-	int sergeryRoomCount;
+    int sergeryRoomCount;
     bool Opened;
     bool fuse;
+    bool ending;
 
     int breadCount;
     int waterCount;
@@ -82,5 +75,3 @@ public:
     void ControlRoomPuzzle();
     void Ending();
 };
-
-

@@ -26,4 +26,5 @@ public:
     virtual void IncreaseAttack(int value);
     virtual void TakeDamage(int damage);
     virtual void ShowStatus() const;
+
 };

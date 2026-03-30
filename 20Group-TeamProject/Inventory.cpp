@@ -221,29 +221,9 @@ void Inventory::RemoveEmptyStackableItems()
     }
 }
 
-void Inventory::ShowInventory() const // 구버전 함수, Battle.cpp에서 기존 호출 중
-{
-    std::cout << "\n===== 인벤토리 =====\n";
-
-    for (int i = 0; i < static_cast<int>(items.size()); ++i)
-    {
-        std::cout << i + 1 << ". " << items[i].GetName();
-
-        ItemType type = items[i].GetType();
-        if (type == ItemType::PISTOL_AMMO || type == ItemType::SHOTGUN_AMMO)
-        {
-            std::cout << " x" << items[i].GetValue();
-        }
-
-        std::cout << "\n";
-    }
-
-    std::cout << "\n골드 : " << gold << "\n";
-}
-
 void Inventory::ShowInventory(int selectedIndex) const  // 최신 함수, OpenInventory() 내부에서 사용
 {
-    std::cout << "\n===== 인벤토리 =====\n";
+    std::cout << "\n========== 인벤토리 ==========\n";
     std::cout << "[W/S] 이동  [E] 선택  [Q] 닫기\n\n";
 
     for (int i = 0; i < static_cast<int>(items.size()); ++i)

@@ -62,3 +62,4 @@ void Character::ShowStatus() const
         << "HP: " << hp << "/" << maxHp
         << ", Attack: " << attack << std::endl;
 }
+
