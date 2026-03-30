@@ -4,7 +4,7 @@
 
 class Player : public Character
 {
-private:
+public:
 	enum WeaponType
 	{
 		non,
@@ -13,16 +13,6 @@ private:
 		shotgun,
 
 	};
-	int level;
-	int maxLevel;
-	int exp;
-	int expToNextLevel;
-	int gold;
-	WeaponType currentWeapon;
-	std::string myWeapon;
-	bool pistolIsArmed;
-	bool shotgunIsArmed;
-public:
 	Player();
 
 	~Player();
@@ -39,5 +29,21 @@ public:
 	void ResetNickName();
 	void GetRest();
 	void CurrentWeaponType();
+<<<<<<< HEAD
 	void ShowExpBar() const;
+=======
+
+private:
+
+	int level;
+	int maxLevel;
+	int exp;
+	int expToNextLevel;
+	int gold;
+	WeaponType currentWeapon;
+	std::string myWeapon;
+	bool pistolIsArmed;
+	bool shotgunIsArmed;
+
+>>>>>>> 73e872cae6fc6943a290d3016eeb28c94bece624
 };
