@@ -87,6 +87,10 @@ bool Item::Use(Player& player)
     case ItemType::KNIFE:
         std::cout << "경찰 임용 선물로 받은 보급형 서바이벌 나이프.\n";
         return false;
+
+    case ItemType::NOTE:
+        std::cout << "비상 상황 발생 시를 대비해 감시실 금고 해제 순서를 기록해 둔다.\n\'L7 - R12 - L3\'\n";
+        return false;
     }
 
     return false;
