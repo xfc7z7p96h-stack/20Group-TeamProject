@@ -10,7 +10,6 @@ Player::Player()
 }
 Player::~Player()
 {
-
 }
 
 void Player::ShowStatus() const
