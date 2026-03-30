@@ -11,6 +11,7 @@ Player::Player()
 }
 Player::~Player()
 {
+
 }
 
 void PrintStatChange(const std::string& name, int oldValue, int newValue)
