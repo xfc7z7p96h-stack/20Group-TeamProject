@@ -4,12 +4,14 @@
 class Logger
 {
 public:
-    // 기본 출력
     static void Log(const std::string& message);
     static void Line();
     static void Space();
 
-    // ===== 게임 이벤트 로그 =====
+    // ===== 타이핑 출력 =====
+    static void TypeLine(const std::string& text, int delay = 30);
+
+    // 이벤트 로그
     static void Attack(const std::string& attacker,
         const std::string& target,
         int damage);
