@@ -19,11 +19,11 @@ int Battle::AttackDamage(Player& player, AttackType attackType)      ///////////
 {
     if (attackType == AttackType::Pistol)
     {
-        return player.GetAttack() + 10 * player.GetLevel();
+        return player.GetAttack() + 30 * player.GetLevel();
     }
     else if (attackType == AttackType::Shotgun)
     {
-        return player.GetAttack() + 25 * player.GetLevel();
+        return player.GetAttack() + 70 * player.GetLevel();
     }
 
     return player.GetAttack();
@@ -87,7 +87,7 @@ bool Battle::PlayerAttack(Player& player, Zombie& monster, AttackType attackType
 {
     int damage = AttackDamage(player, attackType);
 
-    bool critical = Random::Chance(15);            /////////////// Å©¸®Æ¼ÄÃ È®·ü 15%, 3¹è µ¥¹ÌÁö
+    bool critical = Random::Chance(10);            /////////////// Å©¸®Æ¼ÄÃ È®·ü 10%, 3¹è µ¥¹ÌÁö
     if (critical)
     {
         std::cout << "\n...º»ÀÇ ¾Æ´Ï°Ô ¸Ó¸®¸¦ Á¤È®È÷ ³ë·È´Ù!(X 3)\n\n";
@@ -157,7 +157,7 @@ void Battle::BattleReward(Player& player, Inventory& inven) ////////////////////
     Item rewardItem = RandomItem();
     int rewardGold = RandomGold();
 
-    player.GainExp(35);
+    player.GainExp(100);
     Sleep(500);
 
     inven.AddItem(rewardItem);
@@ -312,13 +312,15 @@ void Battle::Encounter(Player& player, Inventory& inven)        ////////////////
 
 Item Battle::RandomItem()
 {
-    switch (Random::Range(1, 3))
+    switch (Random::Range(1, 4))
     {
     case 1:
         return Item("¼¦°Ç Åº¾à", Random::Range(1, 2), ItemType::SHOTGUN_AMMO);
     case 2:
         return Item("±ÇÃÑ Åº¾à", Random::Range(2, 3), ItemType::PISTOL_AMMO);
     case 3:
+        return Item("±ÇÃÑ Åº¾à", Random::Range(2, 3), ItemType::PISTOL_AMMO);
+    case 4:
         return Item("±ÇÃÑ Åº¾à", Random::Range(2, 3), ItemType::PISTOL_AMMO);
     }
 

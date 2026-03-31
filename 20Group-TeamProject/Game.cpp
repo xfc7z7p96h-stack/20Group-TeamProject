@@ -25,6 +25,7 @@ Game::Game()
     storageCount = 0;
     corridorEndCount = 0;
     storageWater = false;
+    restroombread = false;
 
     CurrentRoom = ROOM_OUTSIDE;
     FirstFloorIntro = false;
@@ -832,8 +833,6 @@ void Game::Run()
                         Logger::Space();
                         Logger::Log("어딘가에서 낮고 기이한 신음소리가 길게 울렸다.");
                         Logger::Space();
-                        Logger::Log("\"크르르륵...\"");
-                        Logger::Space();
                         Logger::Log("곧이어, 살점이 바닥을 질질 끄는 듯한 소리가 끝에서 들려왔다.");
                         Logger::Space();
                         Logger::Log("등골을 타고 식은땀이 천천히 흘러내렸다.");
@@ -959,11 +958,20 @@ void Game::Run()
                 break;
 
             case 'e':    ///////////////////////화장실에서 빵 발견
-                Logger::Log("쓰레기통에서 포장된 빵을 발견했다.\n");                  
-                Logger::Log("찝찝하지만 먹을 수 있을 것 같다....\n");
-                inven.AddItem(Item("빵", 1, ItemType::BREAD));
-                ++breadCount;
-                Logger::Log("(아무 키나 누르세요.)");
+                if (restroombread == false)
+                {
+                    restroombread = true;
+                    Logger::Log("쓰레기통에서 포장된 빵을 발견했다.\n");
+                    Logger::Log("찝찝하지만 먹을 수 있을 것 같다....\n");
+                    inven.AddItem(Item("빵", 1, ItemType::BREAD));
+                    ++breadCount;
+                    Logger::Log("(아무 키나 누르세요.)");
+                }
+                else
+                {
+                    Logger::Log("딱히 눈에 띄는 건 없다.");
+                    Logger::Log("(아무 키나 누르세요.)");
+                }
                 _getch();
                 break;
 
@@ -1181,7 +1189,7 @@ void Game::Run()
                     Logger::Log("침대 옆 책상에서 눈에 띄는 종이를 발견했다.\n");
                     Logger::Space();
                     Logger::Log("[ 환자 기록지 ] 획득\n");
-                    inven.AddItem(Item("환자 기록지", 0, ItemType::NOTE_ISOLATIONROOM_1));
+                    inven.AddItem(Item("환자 기록지", 1, ItemType::NOTE_ISOLATIONROOM_1));
                     Logger::Log("(아무 키나 누르세요.)");
                 }
                 else
@@ -1233,7 +1241,7 @@ void Game::Run()
                     Logger::Log("'1번 강민석'  '2번 이준호'  '3번 박도윤'  '4번 최현우'\n");
                     Logger::Space();
                     Logger::Log("[ 병상 메모 ] 획득 \n");
-                    inven.AddItem(Item("병상 메모", 0, ItemType::NOTE_ISOLATIONROOM_2));
+                    inven.AddItem(Item("병상 메모", 1, ItemType::NOTE_ISOLATIONROOM_2));
                     Logger::Space();
                     Logger::Log("(아무 키나 누르세요.)");
                 }
@@ -1414,7 +1422,7 @@ void Game::Run()
                     Logger::Log("바닥에 파일이 떨어져있다.\n");
                     Logger::Space();
                     Logger::Log("[ 증상 단계 관찰일지 ] 획득\n");
-                    inven.AddItem(Item("증상 단계 관찰일지", 0, ItemType::NOTE_ARCHIVE));
+                    inven.AddItem(Item("증상 단계 관찰일지", 1, ItemType::NOTE_ARCHIVE));
                     Logger::Log("(아무 키나 누르세요.)");
                 }
                 else
@@ -1513,7 +1521,7 @@ void Game::Run()
             case 'd':
                 Logger::Log("벽을 기대고 쓰러진 시체의 손에 무언가 들려있다.\n\n");
                 Logger::Log("[ 감시실 금고 메모 ] 획득\n");
-                inven.AddItem(Item("감시실 금고 메모", 0, ItemType::NOTE_CONTROLROOM));
+                inven.AddItem(Item("감시실 금고 메모", 1, ItemType::NOTE_CONTROLROOM));
                 _getch();
                 break;
 

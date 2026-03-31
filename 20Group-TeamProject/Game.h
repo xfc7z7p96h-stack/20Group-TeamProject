@@ -47,6 +47,7 @@ private:
     int storageCount;
     int corridorEndCount;
     bool storageWater;
+    bool restroombread;
 
     bool archivePuzzle;
     bool isolationRoomitem;

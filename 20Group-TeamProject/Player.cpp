@@ -112,6 +112,7 @@ void Player::LevelUp()
         maxHp += level * 20;
         attack += level * 5;
         hp = maxHp;
+        expToNextLevel += 100;
 
         SetConsoleTextAttribute(hConsole, 9);
         std::cout << "\nLevel Up!\n";
