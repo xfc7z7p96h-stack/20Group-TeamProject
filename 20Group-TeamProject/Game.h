@@ -48,6 +48,11 @@ private:
     int corridorEndCount;
     bool storageWater;
     bool restroombread;
+    bool generatorromm;
+    bool generatorrommWater;
+    bool controlroomWater;
+    bool meetingroomBread;
+    bool corridorBW;
 
     bool archivePuzzle;
     bool isolationRoomitem;

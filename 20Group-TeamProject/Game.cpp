@@ -26,6 +26,8 @@ Game::Game()
     corridorEndCount = 0;
     storageWater = false;
     restroombread = false;
+    meetingroomBread = false;
+    corridorBW = false;
 
     CurrentRoom = ROOM_OUTSIDE;
     FirstFloorIntro = false;
@@ -42,13 +44,16 @@ Game::Game()
     Opened = false;
     fuse = false;
     ending = false;
+    generatorromm = false;
+    generatorrommWater = false;
+    controlroomWater = false;
 
     breadCount = 0;
     waterCount = 0;
 }
 void Game::RandomEncounter()   /// 인카운터 확률 조정
 {
-    if (Random::Chance(30))
+    if (Random::Chance(35))
     {
         system("cls");
         Logger::Log("[ !!!! ] 시야 끝에서 좀비가 비틀거리며 다가온다...\n");
@@ -267,10 +272,15 @@ void Game::ArchivePuzzle()
 void Game::ShowHelp()
 {
     Logger::Log("| 새로운 방이나 다른 층 진입 시, 일정 확률로 좀비와 마주하게 됩니다.");
+    Logger::Space();
     Logger::Log("| 근접 공격은 횟수에 제한이 없지만, 반드시 반격을 당하게 됩니다.");
     Logger::Log("| 권총 또는 샷건으로 공격 시 총알을 소비하지만 반격은 당하지 않습니다.");
+    Logger::Space();
     Logger::Log("| 도망을 선택할 경우 50%의 확률로 도망칠 수 있습니다.");
     Logger::Log("| 도망 실패시, 좀비에게 붙잡혀 공격 당한 후 전투를 재개합니다.\n");
+    Logger::Space();
+    Logger::Log("| [E] 키를 눌러 조사를 시작하세요. [WASD]로 시선을 돌려 벽면과 구석을 꼼꼼히 살펴야 합니다.\n");
+    Logger::Log("| 조사 시작: [E] / 시선 이동: [WASD] (벽면의 단서를 찾아보세요)\n");
     Logger::Log("(아무 키나 누르세요.)");
     _getch();
 }
@@ -674,11 +684,25 @@ void Game::Run()
                 {
                     ++corridorCount;
                 }
-                Logger::Log("딱히 눈에 띄는 것은 없다.\n");
-                Logger::Log("(아무 키나 누르세요.)");
+                if (corridorBW == false)
+                {
+                    corridorBW = true;
+                    Logger::Log("문 옆에 빵과 물이 널부러져 있다.\n");
+                    Logger::Log("챙겨두는 게 좋을 것 같다.\n");
+                    Logger::Log("[ 빵 ] 획득\n");
+                    Logger::Log("[ 물 ] 획득\n");
+                    inven.AddItem(Item("빵", 1, ItemType::BREAD));
+                    ++breadCount;
+                    inven.AddItem(Item("물", 1, ItemType::WATER));
+                    ++waterCount;
+
+                }
+                else
+                {
+                    Logger::Log("딱히 눈에 띄는 건 없다.\n");
+                }
                 _getch();
                 break;
-
             case 'w':
                 
                 CurrentRoom = ROOM_FIRSTFLOOR_STORAGE;
@@ -1059,10 +1083,23 @@ void Game::Run()
                 break;
 
             case 's':
-                Logger::Log("딱히 눈에 띄는 건 없다.\n");
-                Logger::Log("(아무 키나 누르세요)");
+                if (meetingroomBread == false)
+                {
+                    meetingroomBread = true;
+                    Logger::Log("선반 위에 빵이 2개 놓여있다.\n");
+                    inven.AddItem(Item("빵", 2, ItemType::BREAD));
+                    ++breadCount;
+                    ++breadCount;
+                    Logger::Log("(아무 키나 누르세요.)");
+                }
+                else
+                {
+                    Logger::Log("딱히 눈에 띄는 건 없다.");
+                    Logger::Log("(아무 키나 누르세요.)");
+                }
                 _getch();
                 break;
+
 
             case 'a':
 
@@ -1291,7 +1328,7 @@ void Game::Run()
                     Logger::Log("[ 비밀 통로 열쇠 ] 획득\n");
 					secretPassage = true;
 				}
-                else if (sergeryRoomCount == 10)
+                else if (sergeryRoomCount == 4)
                 {
                     Logger::Log("계속 뒤적거리다보니 빵과 물을 발견했다.\n");
                     Logger::Log("[ 빵 ] 획득\n");
@@ -1387,10 +1424,22 @@ void Game::Run()
                 break;
 
             case 'a':
-                Logger::Log("딱히 눈에 띄는 건 없다.\n");
+                if (controlroomWater == false)
+                {
+                    controlroomWater = true;
+                    ++waterCount;
+                    Logger::Log("책상 위에 물이 놓여져 있다.\n\n");
+                    Logger::Log("[ 물 ] 획득\n");
+                    Logger::Log("(아무 키나 누르세요.)");
+                    inven.AddItem(Item("물", 1, ItemType::WATER));
+                }
+                else
+                {
+                    Logger::Log("딱히 눈에 띄는 건 없다.\n");
+                    Logger::Log("(아무 키나 누르세요.)");
+                }
                 _getch();
                 break;
-
             case 'd':
 
                 CurrentRoom = ROOM_THIRDFLOOR_ISOLATIONROOM;
@@ -1488,8 +1537,20 @@ void Game::Run()
                 break;
 
             case 'e':
-                Logger::Log("이 곳은 비상발전실\n");
-                Logger::Log("(아무 키나 누르세요.)");
+                if (generatorrommWater == false)
+                {
+                    ++waterCount;
+                    generatorrommWater = true;
+                    Logger::Log("바닥 구석에서 물을 발견했다.\n\n");
+                    Logger::Log("[ 물 ] 획득\n");
+                    Logger::Log("(아무 키나 누르세요.)");
+                    inven.AddItem(Item("물", 1, ItemType::WATER));
+                }
+                else
+                {
+                    Logger::Log("딱히 눈에 띄는 건 없다.\n");
+                    Logger::Log("(아무 키나 누르세요.)");
+                }
                 _getch();
                 break;
 
@@ -1497,7 +1558,8 @@ void Game::Run()
                 if (fuse == false)
                 {
                     Logger::Log("옥상으로 향하는 엘리베이터다.\n");
-                    Logger::Log("퓨즈 박스가 비어있어 작동은 하지 않는다.");
+                    Logger::Log("퓨즈 박스가 비어있어 작동은 하지 않는다.\n");
+                    Logger::Log("(아무 키나 누르세요.)");
                 }
                 else
                 {
@@ -1515,13 +1577,24 @@ void Game::Run()
 
             case 'a':
                 Logger::Log("무너진 잔해가 길을 막고 있다..\n");
+                Logger::Log("(아무 키나 누르세요.)");
                 _getch();
                 break;
 
             case 'd':
-                Logger::Log("벽을 기대고 쓰러진 시체의 손에 무언가 들려있다.\n\n");
-                Logger::Log("[ 감시실 금고 메모 ] 획득\n");
-                inven.AddItem(Item("감시실 금고 메모", 1, ItemType::NOTE_CONTROLROOM));
+                if (generatorromm == false)
+                {
+                    generatorromm = true;
+                    Logger::Log("벽을 기대고 쓰러진 시체의 손에 무언가 들려있다.\n\n");
+                    Logger::Log("[ 감시실 금고 메모 ] 획득\n");
+                    Logger::Log("(아무 키나 누르세요.)");
+                    inven.AddItem(Item("감시실 금고 메모", 1, ItemType::NOTE_CONTROLROOM));
+                }
+                else
+                {
+                    Logger::Log("벽을 기대고 쓰러진 시체가 있다.\n\n");
+                    Logger::Log("(아무 키나 누르세요.)");
+                }
                 _getch();
                 break;
 
