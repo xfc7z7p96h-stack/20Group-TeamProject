@@ -21,7 +21,7 @@ int Battle::AttackDamage(Player& player, AttackType attackType)      ///////////
 {
     if (attackType == AttackType::Pistol)
     {
-        return player.GetAttack() + 30 * player.GetLevel();
+        return player.GetAttack() + 20 * player.GetLevel();
     }
     else if (attackType == AttackType::Shotgun)
     {
@@ -205,8 +205,8 @@ void Battle::Encounter(Player& player, Inventory& inven)        ////////////////
     }
 
     int playerLevel = player.GetLevel();
-    monster->AddMaxHp(playerLevel * 20);
-    monster->AddAttack(playerLevel * 5);
+    monster->AddMaxHp(playerLevel * 50);
+    monster->AddAttack(playerLevel * 10);
 
     if (!monster)
     {

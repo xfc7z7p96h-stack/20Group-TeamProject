@@ -1151,11 +1151,17 @@ void Game::Run()
                 break;
 
             default:
-                std::cout << "딴 짓하고 있을 때가 아니다. 열쇠를 찾아야 한다.(아무 키나 누르세요)\n";
+                if (secretRoomKey == false)
+                {
+                    Logger::Log("어딘가에 열쇠가 있을 것 같다.\n");
+                }
+                else
+                {
+                    Logger::Log("딱히 눈에 띄는 건 없다.\n");
+                }
                 _getch();
                 break;
             }
-            break;
 
         case ROOM_THIRDFLOOR_MAINHALL:
             switch (Input)
