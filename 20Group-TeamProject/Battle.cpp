@@ -1,4 +1,4 @@
-#include "Battle.h"
+ #include "Battle.h"
 #include "Logger.h"
 #include "Random.h"
 #include <windows.h>
@@ -6,6 +6,8 @@
 #include <memory>
 #include <conio.h>
 #include <cstdlib>
+
+std::map<std::string, int> Battle::killCount;
 
 void ClearKeyBuffer()
 {
@@ -109,6 +111,8 @@ bool Battle::PlayerAttack(Player& player, Zombie& monster, AttackType attackType
 
     if (monster.IsDead())
     {
+        AddKillCount(monster.GetName());   // ¡ç Ãß°¡
+
         std::cout << monster.GetName() << "°¡ ¾²·¯Á³´Ù...\n\n";
         Sleep(500);
         return true;
@@ -317,11 +321,17 @@ Item Battle::RandomItem()
     case 1:
         return Item("¼¦°Ç Åº¾à", Random::Range(1, 2), ItemType::SHOTGUN_AMMO);
     case 2:
-        return Item("±ÇÃÑ Åº¾à", Random::Range(2, 3), ItemType::PISTOL_AMMO);
+        return Item("±ÇÃÑ Åº¾à", Random::Range(3, 5), ItemType::PISTOL_AMMO);
     case 3:
+<<<<<<< HEAD
         return Item("±ÇÃÑ Åº¾à", Random::Range(2, 3), ItemType::PISTOL_AMMO);
     case 4:
         return Item("±ÇÃÑ Åº¾à", Random::Range(2, 3), ItemType::PISTOL_AMMO);
+=======
+        return Item("±ÇÃÑ Åº¾à", Random::Range(3, 5), ItemType::PISTOL_AMMO);
+    case 4:
+        return Item("±ÇÃÑ Åº¾à", Random::Range(3, 5), ItemType::PISTOL_AMMO);
+>>>>>>> newwork
     }
 
     return Item("±ÇÃÑ Åº¾à", 1, ItemType::PISTOL_AMMO);
@@ -330,4 +340,40 @@ Item Battle::RandomItem()
 int Battle::RandomGold()
 {
     return Random::Range(50, 100);
+}
+
+void Battle::AddKillCount(const std::string& name)
+{
+    killCount[name]++;
+}
+
+void Battle::PrintKillResult()
+{
+    system("cls");
+
+    Logger::Line();
+    Logger::Log("            ENDING REPORT");
+    Logger::Line();
+    Logger::Space();
+
+    if (killCount.empty())
+    {
+        Logger::Log("Ã³Ä¡ÇÑ Á»ºñ°¡ ¾ø½À´Ï´Ù.");
+    }
+    else
+    {
+        for (const auto& pair : killCount)
+        {
+            std::cout << pair.first << " : "
+                << pair.second << " ¸¶¸® Ã³Ä¡\n";
+        }
+    }
+
+    Logger::Space();
+    Logger::Line();
+    Logger::Log("»ýÁ¸ ±â·Ï Á¾·á.");
+    Logger::Line();
+
+    _getch();
+    exit(0);
 }
