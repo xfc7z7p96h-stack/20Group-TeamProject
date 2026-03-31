@@ -1,4 +1,4 @@
-#include "Battle.h"
+ #include "Battle.h"
 #include "Logger.h"
 #include "Random.h"
 #include <windows.h>
@@ -317,9 +317,11 @@ Item Battle::RandomItem()
     case 1:
         return Item("¼¦°Ç Åº¾à", Random::Range(1, 2), ItemType::SHOTGUN_AMMO);
     case 2:
-        return Item("±ÇÃÑ Åº¾à", Random::Range(2, 3), ItemType::PISTOL_AMMO);
+        return Item("±ÇÃÑ Åº¾à", Random::Range(3, 5), ItemType::PISTOL_AMMO);
     case 3:
-        return Item("±ÇÃÑ Åº¾à", Random::Range(2, 3), ItemType::PISTOL_AMMO);
+        return Item("±ÇÃÑ Åº¾à", Random::Range(3, 5), ItemType::PISTOL_AMMO);
+    case 4:
+        return Item("±ÇÃÑ Åº¾à", Random::Range(3, 5), ItemType::PISTOL_AMMO);
     }
 
     return Item("±ÇÃÑ Åº¾à", 1, ItemType::PISTOL_AMMO);
