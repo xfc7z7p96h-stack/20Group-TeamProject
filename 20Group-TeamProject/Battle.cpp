@@ -7,6 +7,8 @@
 #include <conio.h>
 #include <cstdlib>
 
+std::map<std::string, int> Battle::killCount;
+
 void ClearKeyBuffer()
 {
     while (_kbhit())
@@ -109,6 +111,8 @@ bool Battle::PlayerAttack(Player& player, Zombie& monster, AttackType attackType
 
     if (monster.IsDead())
     {
+        AddKillCount(monster.GetName());   // ← 추가
+
         std::cout << monster.GetName() << "가 쓰러졌다...\n\n";
         Sleep(500);
         return true;
@@ -328,4 +332,40 @@ Item Battle::RandomItem()
 int Battle::RandomGold()
 {
     return Random::Range(50, 100);
+}
+
+void Battle::AddKillCount(const std::string& name)
+{
+    killCount[name]++;
+}
+
+void Battle::PrintKillResult()
+{
+    system("cls");
+
+    Logger::Line();
+    Logger::Log("            ENDING REPORT");
+    Logger::Line();
+    Logger::Space();
+
+    if (killCount.empty())
+    {
+        Logger::Log("처치한 좀비가 없습니다.");
+    }
+    else
+    {
+        for (const auto& pair : killCount)
+        {
+            std::cout << pair.first << " : "
+                << pair.second << " 마리 처치\n";
+        }
+    }
+
+    Logger::Space();
+    Logger::Line();
+    Logger::Log("생존 기록 종료.");
+    Logger::Line();
+
+    _getch();
+    exit(0);
 }
