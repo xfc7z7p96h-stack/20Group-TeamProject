@@ -75,7 +75,6 @@ namespace Ending
         Logger::TypeLine("[ BAD ENDING - 구조는 오지 않았다 ]", 20);
 
         _getch();
-        exit(0);
     }
 
     // =========================
@@ -157,6 +156,5 @@ namespace Ending
         Logger::TypeLine("[ TRUE ENDING - 라쿤 시티 탈출 ]", 20);
 
         _getch();
-        exit(0);
     }
 }

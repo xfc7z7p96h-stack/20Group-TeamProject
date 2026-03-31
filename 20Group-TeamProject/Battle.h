@@ -4,6 +4,8 @@
 #include "Zombie.h"
 #include "Inventory.h"
 #include <memory>
+#include <map>
+#include <string>
 
 class Battle
 {
@@ -24,4 +26,11 @@ public:
 
     Item RandomItem();
     int RandomGold();
+public:
+    static void AddKillCount(const std::string& name);
+    static void PrintKillResult();
+
+private:
+    static std::map<std::string, int> killCount;
 };
+

@@ -1537,9 +1537,11 @@ void Game::Ending()
     if (breadCount < 5 || waterCount < 5)
     {
         Ending::StarvationEnding();
+        Battle::PrintKillResult();
     }
     else
     {
         Ending::RescueEnding();
+        Battle::PrintKillResult();
     }
 }
