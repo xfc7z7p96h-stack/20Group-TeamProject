@@ -323,15 +323,9 @@ Item Battle::RandomItem()
     case 2:
         return Item("±ÇÃÑ Åº¾à", Random::Range(3, 5), ItemType::PISTOL_AMMO);
     case 3:
-<<<<<<< HEAD
-        return Item("±ÇÃÑ Åº¾à", Random::Range(2, 3), ItemType::PISTOL_AMMO);
-    case 4:
-        return Item("±ÇÃÑ Åº¾à", Random::Range(2, 3), ItemType::PISTOL_AMMO);
-=======
         return Item("±ÇÃÑ Åº¾à", Random::Range(3, 5), ItemType::PISTOL_AMMO);
     case 4:
         return Item("±ÇÃÑ Åº¾à", Random::Range(3, 5), ItemType::PISTOL_AMMO);
->>>>>>> newwork
     }
 
     return Item("±ÇÃÑ Åº¾à", 1, ItemType::PISTOL_AMMO);
