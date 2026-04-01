@@ -1162,6 +1162,7 @@ void Game::Run()
                 _getch();
                 break;
             }
+            break;
 
         case ROOM_THIRDFLOOR_MAINHALL:
             switch (Input)
